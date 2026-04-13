@@ -143,9 +143,9 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
       <div class="msub" id="m-hrs">0h 0m logged</div>
     </div>
     <div class="metric a">
-      <div class="mlabel">Stream (after fee)</div>
+      <div class="mlabel">Stream available</div>
       <div class="mval" id="m-stream">£0.00</div>
-      <div class="msub">50% − £1.95</div>
+      <div class="msub">50% of earned</div>
     </div>
     <div class="metric b full">
       <div class="mlabel">Days to payday</div>
@@ -183,12 +183,12 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
       <div class="card-head"><span class="card-title">Stream early access</span></div>
       <div class="srow"><span class="srow-lbl">Total earned this period</span><span class="srow-val" id="st-total">£0.00</span></div>
       <div class="srow"><span class="srow-lbl">Stream limit (50%)</span><span class="srow-val g" id="st-50">£0.00</span></div>
-      <div class="srow"><span class="srow-lbl">Stream fee</span><span class="srow-val r">− £1.95</span></div>
-      <div class="srow total"><span class="srow-lbl">You actually receive</span><span class="srow-val g" id="st-actual">£0.00</span></div>
+      <div class="srow"><span class="srow-lbl">Stream available (50%)</span><span class="srow-val g" id="st-50">£0.00</span></div>
+      <div class="srow total"><span class="srow-lbl">You receive via Stream</span><span class="srow-val g" id="st-actual">£0.00</span></div>
       <div class="srow"><span class="srow-lbl">Still get at payday</span><span class="srow-val a" id="st-remain">£0.00</span></div>
       <div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div>
-      <div class="plabels"><span>£0</span><span id="pl-mid">You get: £0.00</span><span id="pl-max">Total: £0.00</span></div>
-      <div class="tip">Stream gives you up to 50% of earned pay early. The £1.95 fee is already deducted — what you see is exactly what hits your account.</div>
+      <div class="plabels"><span>£0</span><span id="pl-mid">Stream: £0.00</span><span id="pl-max">Total: £0.00</span></div>
+      <div class="tip">Stream gives you up to 50% of your earned pay early. Note: Powerleague deducts the £1.95 Stream fees from your final payday, not from each withdrawal.</div>
     </div>
   </div>
 
@@ -201,7 +201,7 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
 </div>
 
 <script>
-const RATE = 11.44, FEE = 1.95;
+const RATE = 11.44;
 
 // Full 2026 Powerleague pay schedule from official document
 const PAY_SCHEDULE = [
@@ -345,16 +345,16 @@ function upd(id, f, v) {
 }
 
 function updateMetrics(totalHrs, earned) {
-  const half = earned*0.5, actual = Math.max(0, half-FEE);
+  const half = earned*0.5;
   document.getElementById('m-earned').textContent = '£'+earned.toFixed(2);
   document.getElementById('m-hrs').textContent = fmt(totalHrs)+' logged';
-  document.getElementById('m-stream').textContent = '£'+actual.toFixed(2);
+  document.getElementById('m-stream').textContent = '£'+half.toFixed(2);
   document.getElementById('st-total').textContent = '£'+earned.toFixed(2);
   document.getElementById('st-50').textContent = '£'+half.toFixed(2);
-  document.getElementById('st-actual').textContent = '£'+actual.toFixed(2);
+  document.getElementById('st-actual').textContent = '£'+half.toFixed(2);
   document.getElementById('st-remain').textContent = '£'+half.toFixed(2);
   document.getElementById('pf').style.width = earned>0?'50%':'0%';
-  document.getElementById('pl-mid').textContent = 'You get: £'+actual.toFixed(2);
+  document.getElementById('pl-mid').textContent = 'You get: £'+half.toFixed(2);
   document.getElementById('pl-max').textContent = 'Total: £'+earned.toFixed(2);
 }
 
