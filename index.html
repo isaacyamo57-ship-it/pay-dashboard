@@ -19,7 +19,6 @@
 html { height: 100%; }
 body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-/* TOP BAR */
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 99; }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand-icon { width: 34px; height: 34px; background: var(--green); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; color: #000; }
@@ -27,10 +26,8 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
 .brand-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
 .rate-pill { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--green-dim); color: var(--green); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.25); }
 
-/* CONTENT */
 .content { flex: 1; padding: 18px 16px 90px; max-width: 700px; margin: 0 auto; width: 100%; }
 
-/* METRICS */
 .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
 .metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
@@ -45,21 +42,17 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
 .metric.b .mval { color: var(--blue); }
 .msub { font-size: 10px; color: var(--muted); margin-top: 5px; font-family: 'DM Mono', monospace; }
 
-/* TABS */
 .tabs { display: flex; gap: 6px; margin-bottom: 18px; }
 .tab { flex: 1; padding: 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; font-family: 'Sora', sans-serif; cursor: pointer; text-align: center; transition: all 0.15s; }
 .tab.on { background: var(--green-dim); border-color: rgba(29,185,84,0.3); color: var(--green); font-weight: 500; }
 
-/* PANELS */
 .panel { display: none; }
 .panel.on { display: block; }
 
-/* CARD */
 .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
 .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .card-title { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 
-/* SHIFTS */
 .shift-list { display: flex; flex-direction: column; gap: 10px; }
 .shift-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
 .shift-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -75,23 +68,32 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
 .add-btn:hover { border-color: var(--green); color: var(--green); }
 .empty { text-align: center; padding: 30px; color: var(--muted2); font-size: 13px; }
 
-/* FORM */
-.fgroup { margin-bottom: 14px; }
-.flabel { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 7px; }
-select, .datein { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 15px; font-family: 'Sora', sans-serif; padding: 12px 14px; outline: none; -webkit-appearance: none; appearance: none; }
-select:focus, .datein:focus { border-color: var(--green); }
+/* PAY SCHEDULE */
+.pay-period-card {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; margin-bottom: 10px;
+}
+.pay-period-card.current {
+  border-color: rgba(29,185,84,0.4); background: var(--green-dim);
+}
+.pay-period-card.next { border-color: rgba(91,156,246,0.4); }
+.period-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.period-month { font-size: 15px; font-weight: 600; color: var(--text); }
+.period-badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+.badge-current { background: var(--green-dim); color: var(--green); border: 1px solid rgba(29,185,84,0.3); }
+.badge-next { background: rgba(91,156,246,0.12); color: var(--blue); border: 1px solid rgba(91,156,246,0.3); }
+.period-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.prow { font-size: 12px; }
+.prow-label { color: var(--muted); margin-bottom: 2px; }
+.prow-val { font-family: 'DM Mono', monospace; color: var(--text); font-size: 13px; }
+.prow-val.green { color: var(--green); font-weight: 500; font-size: 15px; }
+.prow-val.red { color: var(--red); }
 
-/* COUNTDOWN */
-.cd-box { background: var(--green-dim); border: 1px solid rgba(29,185,84,0.2); border-radius: 12px; text-align: center; padding: 24px; margin: 16px 0; }
+.cd-box { background: var(--green-dim); border: 1px solid rgba(29,185,84,0.2); border-radius: 12px; text-align: center; padding: 24px; margin-bottom: 16px; }
 .cd-num { font-size: 60px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--green); line-height: 1; }
 .cd-lbl { font-size: 13px; color: var(--muted); margin-top: 6px; }
 .cd-date { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 6px; }
-.upcoming .urow { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-top: 1px solid var(--border); font-size: 14px; }
-.upcoming .urow:first-child { border-top: none; }
-.nbadge { font-size: 11px; background: var(--green-dim); color: var(--green); padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.2); }
-.ndim { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
 
-/* STREAM */
 .srow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid var(--border); font-size: 14px; }
 .srow:first-child { border-top: none; }
 .srow-lbl { color: var(--muted); }
@@ -107,7 +109,6 @@ select:focus, .datein:focus { border-color: var(--green); }
 .plabels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted2); font-family: 'DM Mono', monospace; }
 .tip { background: var(--amber-dim); border: 1px solid rgba(245,166,35,0.2); border-radius: 10px; padding: 13px 15px; font-size: 13px; color: var(--amber); margin-top: 14px; line-height: 1.55; }
 
-/* BOTTOM NAV */
 .botnav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--bg2); border-top: 1px solid var(--border); z-index: 99; }
 .bnbtn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0 12px; background: none; border: none; color: var(--muted); font-family: 'Sora', sans-serif; font-size: 11px; cursor: pointer; transition: color 0.15s; }
 .bnbtn .ico { font-size: 19px; }
@@ -116,6 +117,7 @@ select:focus, .datein:focus { border-color: var(--green); }
 @media (max-width: 480px) {
   .shift-fields { grid-template-columns: 1fr 1fr; }
   .shift-fields .sfield:first-child { grid-column: span 2; }
+  .period-rows { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -148,7 +150,7 @@ select:focus, .datein:focus { border-color: var(--green); }
     <div class="metric b full">
       <div class="mlabel">Days to payday</div>
       <div class="mval" id="m-days">—</div>
-      <div class="msub" id="m-days-sub">Set your pay date below</div>
+      <div class="msub" id="m-days-sub">Loading...</div>
     </div>
   </div>
 
@@ -172,43 +174,21 @@ select:focus, .datein:focus { border-color: var(--green); }
 
   <!-- PAY DATES -->
   <div id="p-pay" class="panel">
-    <div class="card">
-      <div class="card-head"><span class="card-title">Pay settings</span></div>
-      <div class="fgroup">
-        <label class="flabel">Pay frequency</label>
-        <select id="freq" onchange="calcPay()">
-          <option value="7">Weekly</option>
-          <option value="14" selected>Fortnightly</option>
-          <option value="30">Monthly</option>
-        </select>
-      </div>
-      <div class="fgroup">
-        <label class="flabel">Next pay date</label>
-        <input type="date" class="datein" id="paydate" oninput="calcPay()" />
-      </div>
-      <div id="cd-wrap" style="display:none">
-        <div class="cd-box">
-          <div class="cd-num" id="cd-n">0</div>
-          <div class="cd-lbl">days until payday</div>
-          <div class="cd-date" id="cd-d"></div>
-        </div>
-        <div class="upcoming" id="upcoming"></div>
-      </div>
-    </div>
+    <div id="pay-schedule-list"></div>
   </div>
 
   <!-- STREAM -->
   <div id="p-stream" class="panel">
     <div class="card">
       <div class="card-head"><span class="card-title">Stream early access</span></div>
-      <div class="srow"><span class="srow-lbl">Total earned</span><span class="srow-val" id="st-total">£0.00</span></div>
+      <div class="srow"><span class="srow-lbl">Total earned this period</span><span class="srow-val" id="st-total">£0.00</span></div>
       <div class="srow"><span class="srow-lbl">Stream limit (50%)</span><span class="srow-val g" id="st-50">£0.00</span></div>
-      <div class="srow"><span class="srow-lbl">Stream fee</span><span class="srow-val r" id="st-fee">− £1.95</span></div>
+      <div class="srow"><span class="srow-lbl">Stream fee</span><span class="srow-val r">− £1.95</span></div>
       <div class="srow total"><span class="srow-lbl">You actually receive</span><span class="srow-val g" id="st-actual">£0.00</span></div>
       <div class="srow"><span class="srow-lbl">Still get at payday</span><span class="srow-val a" id="st-remain">£0.00</span></div>
       <div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div>
       <div class="plabels"><span>£0</span><span id="pl-mid">You get: £0.00</span><span id="pl-max">Total: £0.00</span></div>
-      <div class="tip">Stream gives you up to 50% of earned pay early. The £1.95 fee is already deducted above — what you see is exactly what hits your account.</div>
+      <div class="tip">Stream gives you up to 50% of earned pay early. The £1.95 fee is already deducted — what you see is exactly what hits your account.</div>
     </div>
   </div>
 
@@ -222,9 +202,121 @@ select:focus, .datein:focus { border-color: var(--green); }
 
 <script>
 const RATE = 11.44, FEE = 1.95;
+
+// Full 2026 Powerleague pay schedule from official document
+const PAY_SCHEDULE = [
+  { period: 10, month: 'January',   from: '2025-12-07', to: '2026-01-03', cutoff: '2026-01-05', payday: '2026-01-30' },
+  { period: 11, month: 'February',  from: '2026-01-04', to: '2026-01-31', cutoff: '2026-02-02', payday: '2026-02-27' },
+  { period: 12, month: 'March',     from: '2026-02-01', to: '2026-03-07', cutoff: '2026-03-09', payday: '2026-03-27' },
+  { period: 1,  month: 'April',     from: '2026-03-08', to: '2026-04-04', cutoff: '2026-04-06', payday: '2026-04-24' },
+  { period: 2,  month: 'May',       from: '2026-04-05', to: '2026-05-02', cutoff: '2026-05-04', payday: '2026-05-29' },
+  { period: 3,  month: 'June',      from: '2026-05-03', to: '2026-06-06', cutoff: '2026-06-08', payday: '2026-06-26' },
+  { period: 4,  month: 'July',      from: '2026-06-07', to: '2026-07-04', cutoff: '2026-07-06', payday: '2026-07-31' },
+  { period: 5,  month: 'August',    from: '2026-07-05', to: '2026-08-01', cutoff: '2026-08-03', payday: '2026-08-28' },
+  { period: 6,  month: 'September', from: '2026-08-02', to: '2026-09-05', cutoff: '2026-09-07', payday: '2026-09-25' },
+  { period: 7,  month: 'October',   from: '2026-09-06', to: '2026-10-03', cutoff: '2026-10-05', payday: '2026-10-30' },
+  { period: 8,  month: 'November',  from: '2026-10-04', to: '2026-10-31', cutoff: '2026-11-02', payday: '2026-11-27' },
+  { period: 9,  month: 'December',  from: '2026-11-01', to: '2026-12-05', cutoff: '2026-12-07', payday: '2026-12-18' },
+];
+
+function parseDate(str) {
+  const [y,m,d] = str.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+
+function fmtDate(str) {
+  return parseDate(str).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+
+function daysDiff(dateStr) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.ceil((parseDate(dateStr) - now) / 86400000);
+}
+
+function getCurrentPeriod() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  return PAY_SCHEDULE.find(p => now >= parseDate(p.from) && now <= parseDate(p.to));
+}
+
+function getNextPeriod() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  return PAY_SCHEDULE.find(p => parseDate(p.from) > now);
+}
+
+// Returns the next payday that hasn't happened yet
+function getNextPayday() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  return PAY_SCHEDULE.find(p => parseDate(p.payday) >= now);
+}
+
+function renderPaySchedule() {
+  const current = getCurrentPeriod();
+  const next = getNextPeriod();
+  const el = document.getElementById('pay-schedule-list');
+  let html = '';
+
+  // Countdown always points to next upcoming payday
+  const targetPeriod = getNextPayday();
+  if (targetPeriod) {
+    const days = daysDiff(targetPeriod.payday);
+    const cutDays = daysDiff(targetPeriod.cutoff);
+    html += `<div class="cd-box">
+      <div class="cd-num">${Math.max(0, days)}</div>
+      <div class="cd-lbl">days until payday</div>
+      <div class="cd-date">${fmtDate(targetPeriod.payday)}</div>
+    </div>`;
+
+    if (cutDays > 0) {
+      html += `<div class="card" style="background:rgba(231,76,60,0.08);border-color:rgba(231,76,60,0.25);margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--muted);">Timesheet cutoff</span>
+          <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--red);">${cutDays} days left — ${fmtDate(targetPeriod.cutoff)}</span>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="card" style="background:rgba(231,76,60,0.08);border-color:rgba(231,76,60,0.25);margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--muted);">Timesheet cutoff</span>
+          <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--red);">Passed — ${fmtDate(targetPeriod.cutoff)}</span>
+        </div>
+      </div>`;
+    }
+  }
+
+  html += `<div class="card-title" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">2026 Full schedule</div>`;
+
+  PAY_SCHEDULE.forEach(p => {
+    const isCurrent = current && p.payday === current.payday;
+    const isNext = !isCurrent && next && p.payday === next.payday;
+    const days = daysDiff(p.payday);
+    html += `<div class="pay-period-card ${isCurrent?'current':isNext?'next':''}">
+      <div class="period-header">
+        <span class="period-month">${p.month}</span>
+        ${isCurrent ? '<span class="period-badge badge-current">Current period</span>' : isNext ? '<span class="period-badge badge-next">Up next</span>' : ''}
+      </div>
+      <div class="period-rows">
+        <div class="prow"><div class="prow-label">Period</div><div class="prow-val">${fmtDate(p.from)} → ${fmtDate(p.to)}</div></div>
+        <div class="prow"><div class="prow-label">Cutoff</div><div class="prow-val ${daysDiff(p.cutoff) >= 0 && daysDiff(p.cutoff) <= 3 ? 'red' : ''}">${fmtDate(p.cutoff)}</div></div>
+        <div class="prow" style="grid-column:span 2"><div class="prow-label">Pay day</div><div class="prow-val green">${fmtDate(p.payday)}${days > 0 ? ' · ' + days + ' days' : days === 0 ? ' · Today!' : ''}</div></div>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function updatePaydayMetric() {
+  const target = getNextPayday();
+  if (target) {
+    const days = daysDiff(target.payday);
+    document.getElementById('m-days').textContent = Math.max(0, days);
+    document.getElementById('m-days-sub').textContent = days === 0 ? 'Payday today!' : days === 1 ? 'Tomorrow!' : fmtDate(target.payday);
+  }
+}
+
+// SHIFTS
 let shifts = [];
 try { shifts = JSON.parse(localStorage.getItem('plpay') || '[]'); } catch(e) {}
-
 function save() { try { localStorage.setItem('plpay', JSON.stringify(shifts)); } catch(e) {} }
 
 function hrs(s, e) {
@@ -259,7 +351,6 @@ function updateMetrics(totalHrs, earned) {
   document.getElementById('m-stream').textContent = '£'+actual.toFixed(2);
   document.getElementById('st-total').textContent = '£'+earned.toFixed(2);
   document.getElementById('st-50').textContent = '£'+half.toFixed(2);
-  document.getElementById('st-fee').textContent = '− £'+FEE.toFixed(2);
   document.getElementById('st-actual').textContent = '£'+actual.toFixed(2);
   document.getElementById('st-remain').textContent = '£'+half.toFixed(2);
   document.getElementById('pf').style.width = earned>0?'50%':'0%';
@@ -298,29 +389,6 @@ function render() {
   updateMetrics(tot, tot*RATE);
 }
 
-function calcPay() {
-  const dv = document.getElementById('paydate').value;
-  const fd = parseInt(document.getElementById('freq').value);
-  const wrap = document.getElementById('cd-wrap');
-  if (!dv) { wrap.style.display='none'; return; }
-  const now = new Date(); now.setHours(0,0,0,0);
-  const pay = new Date(dv);
-  const diff = Math.ceil((pay-now)/86400000);
-  wrap.style.display = 'block';
-  document.getElementById('cd-n').textContent = Math.max(0,diff);
-  document.getElementById('cd-d').textContent = pay.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('m-days').textContent = Math.max(0,diff);
-  document.getElementById('m-days-sub').textContent = diff===0?'Payday!':diff===1?'Tomorrow!':diff+' days away';
-  let html='', d=new Date(pay);
-  for(let i=0;i<5;i++){
-    if(i>0) d.setDate(d.getDate()+fd);
-    const lbl=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-    html+=`<div class="urow"><span>${lbl}</span>${i===0?'<span class="nbadge">Next</span>':'<span class="ndim">+'+i*fd+'d</span>'}</div>`;
-  }
-  document.getElementById('upcoming').innerHTML=html;
-  try { localStorage.setItem('plpaydate', JSON.stringify({d:dv,f:fd})); } catch(e){}
-}
-
 function go(tab, btn) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab,.bnbtn').forEach(b=>b.classList.remove('on'));
@@ -330,11 +398,8 @@ function go(tab, btn) {
   document.querySelectorAll('.bnbtn')[idx].classList.add('on');
 }
 
-try {
-  const sv = JSON.parse(localStorage.getItem('plpaydate')||'null');
-  if(sv){ document.getElementById('paydate').value=sv.d; document.getElementById('freq').value=sv.f; calcPay(); }
-} catch(e){}
-
+renderPaySchedule();
+updatePaydayMetric();
 render();
 </script>
 </body>
