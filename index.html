@@ -2,293 +2,339 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PL Pay">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d0d0d">
-<title>PL Pay</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>PL Pay — Isaac</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #1db954; --green-dark: #148a3d; --green-dim: rgba(29,185,84,0.12);
-    --bg: #0d0d0d; --bg2: #141414; --bg3: #1c1c1c;
-    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
-    --text: #f0f0f0; --muted: #888; --muted2: #555;
-    --amber: #f5a623; --amber-dim: rgba(245,166,35,0.12);
-    --red: #e74c3c; --red-dim: rgba(231,76,60,0.12);
-    --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
-  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand-icon { width: 34px; height: 34px; background: var(--green); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
-  .brand-icon span { font-size: 18px; font-weight: 700; color: #000; line-height: 1; }
-  .brand-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
-  .brand-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .rate-badge { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--green-dim); color: var(--green); padding: 5px 11px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.25); }
-  .scroll-area { flex: 1; overflow-y: auto; padding: 18px 16px 100px; }
-  .bottom-nav { display: flex; background: var(--bg2); border-top: 1px solid var(--border); position: sticky; bottom: 0; }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: none; border: none; color: var(--muted); font-family: 'Sora', sans-serif; cursor: pointer; font-size: 11px; transition: color 0.15s; }
-  .nav-btn .icon { font-size: 20px; }
-  .nav-btn.active { color: var(--green); }
-  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-  .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
-  .metric::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-  .metric.green::before { background: var(--green); }
-  .metric.amber::before { background: var(--amber); }
-  .metric.blue::before { background: #5b9cf6; }
-  .metric.wide { grid-column: span 2; }
-  .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-  .metric-value { font-size: 24px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
-  .metric.green .metric-value { color: var(--green); }
-  .metric.amber .metric-value { color: var(--amber); }
-  .metric.blue .metric-value { color: #5b9cf6; }
-  .metric-sub { font-size: 10px; color: var(--muted); margin-top: 5px; font-family: 'DM Mono', monospace; }
-  .panel { display: none; }
-  .panel.active { display: block; }
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
-  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .card-title { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
-  .shift-list { display: flex; flex-direction: column; gap: 10px; }
-  .shift-item { background: var(--bg3); border-radius: 10px; padding: 12px; border: 1px solid var(--border); }
-  .shift-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .shift-earned { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
-  .shift-duration { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
-  .shift-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .shift-field label { font-size: 10px; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
-  .shift-field input { width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 13px; font-family: 'DM Mono', monospace; padding: 8px; outline: none; -webkit-appearance: none; }
-  .shift-field input:focus { border-color: var(--green); }
-  .del-btn { background: none; border: none; cursor: pointer; color: var(--muted2); font-size: 18px; padding: 2px 6px; border-radius: 6px; }
-  .add-shift-btn { display: flex; align-items: center; justify-content: center; gap: 6px; background: none; border: 1px dashed var(--border2); border-radius: 10px; color: var(--muted); font-size: 14px; font-family: 'Sora', sans-serif; padding: 13px; cursor: pointer; width: 100%; margin-top: 4px; }
-  .empty-state { text-align: center; padding: 28px; color: var(--muted2); font-size: 13px; }
-  .form-group { margin-bottom: 14px; }
-  .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; display: block; }
-  select, input[type="date"].pay-input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 15px; font-family: 'Sora', sans-serif; padding: 12px 14px; outline: none; -webkit-appearance: none; appearance: none; }
-  select:focus, input[type="date"].pay-input:focus { border-color: var(--green); }
-  .countdown-block { text-align: center; padding: 24px 16px; background: var(--green-dim); border: 1px solid rgba(29,185,84,0.2); border-radius: 12px; margin: 16px 0; }
-  .countdown-number { font-size: 56px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--green); line-height: 1; }
-  .countdown-label { font-size: 13px; color: var(--muted); margin-top: 6px; }
-  .countdown-date { font-size: 14px; font-weight: 500; margin-top: 6px; color: var(--text); }
-  .upcoming-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid var(--border); font-size: 14px; }
-  .upcoming-item:first-child { border-top: none; }
-  .upcoming-badge { font-size: 11px; background: var(--green-dim); color: var(--green); padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.2); }
-  .upcoming-muted { font-family: 'DM Mono', monospace; color: var(--muted); font-size: 12px; }
-  .stream-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-top: 1px solid var(--border); font-size: 14px; }
-  .stream-row:first-child { border-top: none; }
-  .stream-row-label { color: var(--muted); }
-  .stream-row-value { font-family: 'DM Mono', monospace; font-weight: 500; }
-  .stream-row-value.green { color: var(--green); }
-  .stream-row-value.amber { color: var(--amber); }
-  .stream-row-value.red { color: var(--red); }
-  .stream-total { border-top: 1px solid var(--border2) !important; }
-  .stream-total .stream-row-label { font-weight: 600; color: var(--text); font-size: 15px; }
-  .stream-total .stream-row-value { font-size: 22px; }
-  .progress-bar { background: var(--bg3); border-radius: 20px; height: 8px; overflow: hidden; margin: 14px 0 7px; }
-  .progress-fill { height: 100%; background: var(--green); border-radius: 20px; transition: width 0.4s ease; }
-  .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted2); font-family: 'DM Mono', monospace; }
-  .stream-tip { background: var(--amber-dim); border: 1px solid rgba(245,166,35,0.2); border-radius: 10px; padding: 13px 15px; font-size: 13px; color: var(--amber); margin-top: 14px; line-height: 1.55; }
+:root {
+  --green: #1db954; --green-dim: rgba(29,185,84,0.12);
+  --bg: #0d0d0d; --bg2: #141414; --bg3: #1c1c1c;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+  --text: #f0f0f0; --muted: #777; --muted2: #444;
+  --amber: #f5a623; --amber-dim: rgba(245,166,35,0.1);
+  --red: #e74c3c; --blue: #5b9cf6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; }
+body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* TOP BAR */
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 99; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon { width: 34px; height: 34px; background: var(--green); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; color: #000; }
+.brand-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+.brand-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.rate-pill { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--green-dim); color: var(--green); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.25); }
+
+/* CONTENT */
+.content { flex: 1; padding: 18px 16px 90px; max-width: 700px; margin: 0 auto; width: 100%; }
+
+/* METRICS */
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.metric { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
+.metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.metric.g::after { background: var(--green); }
+.metric.a::after { background: var(--amber); }
+.metric.b::after { background: var(--blue); }
+.metric.full { grid-column: span 2; }
+.mlabel { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.mval { font-size: 24px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
+.metric.g .mval { color: var(--green); }
+.metric.a .mval { color: var(--amber); }
+.metric.b .mval { color: var(--blue); }
+.msub { font-size: 10px; color: var(--muted); margin-top: 5px; font-family: 'DM Mono', monospace; }
+
+/* TABS */
+.tabs { display: flex; gap: 6px; margin-bottom: 18px; }
+.tab { flex: 1; padding: 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; font-family: 'Sora', sans-serif; cursor: pointer; text-align: center; transition: all 0.15s; }
+.tab.on { background: var(--green-dim); border-color: rgba(29,185,84,0.3); color: var(--green); font-weight: 500; }
+
+/* PANELS */
+.panel { display: none; }
+.panel.on { display: block; }
+
+/* CARD */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.card-title { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* SHIFTS */
+.shift-list { display: flex; flex-direction: column; gap: 10px; }
+.shift-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.shift-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.shift-earn { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
+.shift-dur { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.shift-fields { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.sfield label { font-size: 10px; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 4px; }
+.sfield input { width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 13px; font-family: 'DM Mono', monospace; padding: 8px 7px; outline: none; -webkit-appearance: none; appearance: none; }
+.sfield input:focus { border-color: var(--green); }
+.del { background: none; border: none; color: var(--muted2); font-size: 17px; cursor: pointer; padding: 2px 5px; border-radius: 5px; }
+.del:hover { color: var(--red); }
+.add-btn { width: 100%; margin-top: 10px; padding: 13px; background: none; border: 1px dashed var(--border2); border-radius: 10px; color: var(--muted); font-size: 14px; font-family: 'Sora', sans-serif; cursor: pointer; }
+.add-btn:hover { border-color: var(--green); color: var(--green); }
+.empty { text-align: center; padding: 30px; color: var(--muted2); font-size: 13px; }
+
+/* FORM */
+.fgroup { margin-bottom: 14px; }
+.flabel { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 7px; }
+select, .datein { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 15px; font-family: 'Sora', sans-serif; padding: 12px 14px; outline: none; -webkit-appearance: none; appearance: none; }
+select:focus, .datein:focus { border-color: var(--green); }
+
+/* COUNTDOWN */
+.cd-box { background: var(--green-dim); border: 1px solid rgba(29,185,84,0.2); border-radius: 12px; text-align: center; padding: 24px; margin: 16px 0; }
+.cd-num { font-size: 60px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--green); line-height: 1; }
+.cd-lbl { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.cd-date { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 6px; }
+.upcoming .urow { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-top: 1px solid var(--border); font-size: 14px; }
+.upcoming .urow:first-child { border-top: none; }
+.nbadge { font-size: 11px; background: var(--green-dim); color: var(--green); padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.2); }
+.ndim { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+
+/* STREAM */
+.srow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid var(--border); font-size: 14px; }
+.srow:first-child { border-top: none; }
+.srow-lbl { color: var(--muted); }
+.srow-val { font-family: 'DM Mono', monospace; font-weight: 500; }
+.srow-val.g { color: var(--green); }
+.srow-val.a { color: var(--amber); }
+.srow-val.r { color: var(--red); }
+.srow.total { border-top: 1px solid var(--border2) !important; margin-top: 2px; }
+.srow.total .srow-lbl { color: var(--text); font-weight: 600; font-size: 15px; }
+.srow.total .srow-val { font-size: 22px; }
+.pbar { background: var(--bg3); border-radius: 20px; height: 8px; overflow: hidden; margin: 14px 0 7px; }
+.pfill { height: 100%; background: var(--green); border-radius: 20px; transition: width 0.4s; }
+.plabels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted2); font-family: 'DM Mono', monospace; }
+.tip { background: var(--amber-dim); border: 1px solid rgba(245,166,35,0.2); border-radius: 10px; padding: 13px 15px; font-size: 13px; color: var(--amber); margin-top: 14px; line-height: 1.55; }
+
+/* BOTTOM NAV */
+.botnav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: var(--bg2); border-top: 1px solid var(--border); z-index: 99; }
+.bnbtn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0 12px; background: none; border: none; color: var(--muted); font-family: 'Sora', sans-serif; font-size: 11px; cursor: pointer; transition: color 0.15s; }
+.bnbtn .ico { font-size: 19px; }
+.bnbtn.on { color: var(--green); }
+
+@media (max-width: 480px) {
+  .shift-fields { grid-template-columns: 1fr 1fr; }
+  .shift-fields .sfield:first-child { grid-column: span 2; }
+}
 </style>
 </head>
 <body>
+
 <div class="topbar">
   <div class="brand">
-    <div class="brand-icon"><span>£</span></div>
+    <div class="brand-icon">£</div>
     <div>
       <div class="brand-name">PL Pay</div>
       <div class="brand-sub">Powerleague · Isaac</div>
     </div>
   </div>
-  <div class="rate-badge">£11.44/hr</div>
+  <div class="rate-pill">£11.44 / hr</div>
 </div>
-<div class="scroll-area">
+
+<div class="content">
+
   <div class="metrics">
-    <div class="metric green">
-      <div class="metric-label">Earned</div>
-      <div class="metric-value" id="m-earned">£0.00</div>
-      <div class="metric-sub" id="m-hours">0h 0m logged</div>
+    <div class="metric g">
+      <div class="mlabel">Earned</div>
+      <div class="mval" id="m-earned">£0.00</div>
+      <div class="msub" id="m-hrs">0h 0m logged</div>
     </div>
-    <div class="metric amber">
-      <div class="metric-label">Stream (after fee)</div>
-      <div class="metric-value" id="m-stream">£0.00</div>
-      <div class="metric-sub">50% − £1.95</div>
+    <div class="metric a">
+      <div class="mlabel">Stream (after fee)</div>
+      <div class="mval" id="m-stream">£0.00</div>
+      <div class="msub">50% − £1.95</div>
     </div>
-    <div class="metric blue wide">
-      <div class="metric-label">Days to payday</div>
-      <div class="metric-value" id="m-days">—</div>
-      <div class="metric-sub" id="m-days-sub">Set your pay date in Pay dates tab</div>
+    <div class="metric b full">
+      <div class="mlabel">Days to payday</div>
+      <div class="mval" id="m-days">—</div>
+      <div class="msub" id="m-days-sub">Set your pay date below</div>
     </div>
   </div>
-  <div id="panel-shifts" class="panel active">
+
+  <div class="tabs">
+    <button class="tab on" onclick="go('shifts',this)">📋 Shifts</button>
+    <button class="tab" onclick="go('pay',this)">📅 Pay dates</button>
+    <button class="tab" onclick="go('stream',this)">⚡ Stream</button>
+  </div>
+
+  <!-- SHIFTS -->
+  <div id="p-shifts" class="panel on">
     <div class="card">
-      <div class="card-header">
+      <div class="card-head">
         <span class="card-title">Shift log</span>
-        <span id="shift-count" style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">0 shifts</span>
+        <span id="s-count" style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">0 shifts</span>
       </div>
-      <div id="shift-list"><div class="empty-state">No shifts yet — add one below</div></div>
-      <button class="add-shift-btn" onclick="addShift()">+ Add shift</button>
+      <div id="shift-list"><div class="empty">No shifts yet — add one below</div></div>
+      <button class="add-btn" onclick="addShift()">+ Add shift</button>
     </div>
   </div>
-  <div id="panel-paydates" class="panel">
+
+  <!-- PAY DATES -->
+  <div id="p-pay" class="panel">
     <div class="card">
-      <div class="card-header"><span class="card-title">Pay settings</span></div>
-      <div class="form-group">
-        <label class="form-label">Pay frequency</label>
-        <select id="pay-freq" onchange="recalc()">
-          <option value="weekly">Weekly</option>
-          <option value="fortnightly" selected>Fortnightly</option>
-          <option value="monthly">Monthly</option>
+      <div class="card-head"><span class="card-title">Pay settings</span></div>
+      <div class="fgroup">
+        <label class="flabel">Pay frequency</label>
+        <select id="freq" onchange="calcPay()">
+          <option value="7">Weekly</option>
+          <option value="14" selected>Fortnightly</option>
+          <option value="30">Monthly</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Next pay date</label>
-        <input type="date" class="pay-input" id="pay-date" oninput="recalc()" />
+      <div class="fgroup">
+        <label class="flabel">Next pay date</label>
+        <input type="date" class="datein" id="paydate" oninput="calcPay()" />
       </div>
-      <div id="countdown-block" style="display:none">
-        <div class="countdown-block">
-          <div class="countdown-number" id="cd-days">0</div>
-          <div class="countdown-label">days until payday</div>
-          <div class="countdown-date" id="cd-date"></div>
+      <div id="cd-wrap" style="display:none">
+        <div class="cd-box">
+          <div class="cd-num" id="cd-n">0</div>
+          <div class="cd-lbl">days until payday</div>
+          <div class="cd-date" id="cd-d"></div>
         </div>
-        <div id="upcoming-list"></div>
+        <div class="upcoming" id="upcoming"></div>
       </div>
     </div>
   </div>
-  <div id="panel-stream" class="panel">
+
+  <!-- STREAM -->
+  <div id="p-stream" class="panel">
     <div class="card">
-      <div class="card-header"><span class="card-title">Stream early access</span></div>
-      <div class="stream-row"><span class="stream-row-label">Total earned this period</span><span class="stream-row-value" id="s-total">£0.00</span></div>
-      <div class="stream-row"><span class="stream-row-label">Stream limit (50%)</span><span class="stream-row-value green" id="s-stream">£0.00</span></div>
-      <div class="stream-row"><span class="stream-row-label">Stream fee</span><span class="stream-row-value red" id="s-fee">− £1.95</span></div>
-      <div class="stream-row stream-total"><span class="stream-row-label">You actually receive</span><span class="stream-row-value green" id="s-actual">£0.00</span></div>
-      <div class="stream-row"><span class="stream-row-label">Still get at payday</span><span class="stream-row-value amber" id="s-remain">£0.00</span></div>
-      <div class="progress-bar"><div class="progress-fill" id="s-bar" style="width:0%"></div></div>
-      <div class="progress-labels"><span>£0</span><span id="s-bar-mid">You get: £0.00</span><span id="s-bar-max">Total: £0.00</span></div>
-      <div class="stream-tip">Stream gives you up to 50% of your earned pay early. The £1.95 fee is already deducted so you see exactly what hits your account.</div>
+      <div class="card-head"><span class="card-title">Stream early access</span></div>
+      <div class="srow"><span class="srow-lbl">Total earned</span><span class="srow-val" id="st-total">£0.00</span></div>
+      <div class="srow"><span class="srow-lbl">Stream limit (50%)</span><span class="srow-val g" id="st-50">£0.00</span></div>
+      <div class="srow"><span class="srow-lbl">Stream fee</span><span class="srow-val r" id="st-fee">− £1.95</span></div>
+      <div class="srow total"><span class="srow-lbl">You actually receive</span><span class="srow-val g" id="st-actual">£0.00</span></div>
+      <div class="srow"><span class="srow-lbl">Still get at payday</span><span class="srow-val a" id="st-remain">£0.00</span></div>
+      <div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div>
+      <div class="plabels"><span>£0</span><span id="pl-mid">You get: £0.00</span><span id="pl-max">Total: £0.00</span></div>
+      <div class="tip">Stream gives you up to 50% of earned pay early. The £1.95 fee is already deducted above — what you see is exactly what hits your account.</div>
     </div>
   </div>
+
 </div>
-<div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('shifts', this)"><span class="icon">📋</span>Shifts</button>
-  <button class="nav-btn" onclick="switchTab('paydates', this)"><span class="icon">📅</span>Pay dates</button>
-  <button class="nav-btn" onclick="switchTab('stream', this)"><span class="icon">⚡</span>Stream</button>
+
+<div class="botnav">
+  <button class="bnbtn on" onclick="go('shifts',this)"><span class="ico">📋</span>Shifts</button>
+  <button class="bnbtn" onclick="go('pay',this)"><span class="ico">📅</span>Pay dates</button>
+  <button class="bnbtn" onclick="go('stream',this)"><span class="ico">⚡</span>Stream</button>
 </div>
+
 <script>
-const RATE = 11.44;
-const STREAM_FEE = 1.95;
+const RATE = 11.44, FEE = 1.95;
 let shifts = [];
-try { shifts = JSON.parse(localStorage.getItem('pl_shifts_v3') || '[]'); } catch(e) { shifts = []; }
-function save() { try { localStorage.setItem('pl_shifts_v3', JSON.stringify(shifts)); } catch(e) {} }
-function calcHours(start, end) {
-  if (!start || !end) return 0;
-  const [sh, sm] = start.split(':').map(Number);
-  const [eh, em] = end.split(':').map(Number);
-  let mins = (eh * 60 + em) - (sh * 60 + sm);
-  if (mins < 0) mins += 1440;
-  return mins / 60;
+try { shifts = JSON.parse(localStorage.getItem('plpay') || '[]'); } catch(e) {}
+
+function save() { try { localStorage.setItem('plpay', JSON.stringify(shifts)); } catch(e) {} }
+
+function hrs(s, e) {
+  if (!s || !e) return 0;
+  const [sh,sm] = s.split(':').map(Number), [eh,em] = e.split(':').map(Number);
+  let m = (eh*60+em)-(sh*60+sm);
+  if (m < 0) m += 1440;
+  return m/60;
 }
-function formatDuration(hrs) {
-  const h = Math.floor(hrs);
-  const m = Math.round((hrs - h) * 60);
-  return h + 'h ' + (m < 10 ? '0' + m : m) + 'm';
+
+function fmt(h) {
+  const hh = Math.floor(h), mm = Math.round((h-hh)*60);
+  return hh+'h '+(mm<10?'0':'')+mm+'m';
 }
+
 function addShift() {
-  const today = new Date().toISOString().split('T')[0];
-  shifts.push({ id: Date.now(), date: today, start: '', end: '' });
+  shifts.push({ id: Date.now(), d: new Date().toISOString().split('T')[0], s:'', e:'' });
   save(); render();
 }
-function removeShift(id) { shifts = shifts.filter(s => s.id !== id); save(); render(); }
-function updateShift(id, field, val) {
-  const s = shifts.find(s => s.id === id);
-  if (s) { s[field] = val; save(); render(); }
+
+function delShift(id) { shifts = shifts.filter(x=>x.id!==id); save(); render(); }
+
+function upd(id, f, v) {
+  const x = shifts.find(x=>x.id===id);
+  if (x) { x[f]=v; save(); render(); }
 }
+
 function updateMetrics(totalHrs, earned) {
-  const stream = earned * 0.5;
-  const actual = Math.max(0, stream - STREAM_FEE);
-  document.getElementById('m-earned').textContent = '£' + earned.toFixed(2);
-  document.getElementById('m-hours').textContent = formatDuration(totalHrs) + ' logged';
-  document.getElementById('m-stream').textContent = '£' + actual.toFixed(2);
-  document.getElementById('s-total').textContent = '£' + earned.toFixed(2);
-  document.getElementById('s-stream').textContent = '£' + stream.toFixed(2);
-  document.getElementById('s-fee').textContent = '− £' + STREAM_FEE.toFixed(2);
-  document.getElementById('s-actual').textContent = '£' + actual.toFixed(2);
-  document.getElementById('s-remain').textContent = '£' + stream.toFixed(2);
-  document.getElementById('s-bar').style.width = earned > 0 ? '50%' : '0%';
-  document.getElementById('s-bar-mid').textContent = 'You get: £' + actual.toFixed(2);
-  document.getElementById('s-bar-max').textContent = 'Total: £' + earned.toFixed(2);
+  const half = earned*0.5, actual = Math.max(0, half-FEE);
+  document.getElementById('m-earned').textContent = '£'+earned.toFixed(2);
+  document.getElementById('m-hrs').textContent = fmt(totalHrs)+' logged';
+  document.getElementById('m-stream').textContent = '£'+actual.toFixed(2);
+  document.getElementById('st-total').textContent = '£'+earned.toFixed(2);
+  document.getElementById('st-50').textContent = '£'+half.toFixed(2);
+  document.getElementById('st-fee').textContent = '− £'+FEE.toFixed(2);
+  document.getElementById('st-actual').textContent = '£'+actual.toFixed(2);
+  document.getElementById('st-remain').textContent = '£'+half.toFixed(2);
+  document.getElementById('pf').style.width = earned>0?'50%':'0%';
+  document.getElementById('pl-mid').textContent = 'You get: £'+actual.toFixed(2);
+  document.getElementById('pl-max').textContent = 'Total: £'+earned.toFixed(2);
 }
+
 function render() {
-  const list = document.getElementById('shift-list');
-  list.innerHTML = '';
-  if (shifts.length === 0) {
-    list.innerHTML = '<div class="empty-state">No shifts yet — add one below</div>';
-    updateMetrics(0, 0);
-    document.getElementById('shift-count').textContent = '0 shifts';
+  const el = document.getElementById('shift-list');
+  el.innerHTML = '';
+  if (!shifts.length) {
+    el.innerHTML = '<div class="empty">No shifts yet — add one below</div>';
+    updateMetrics(0,0);
+    document.getElementById('s-count').textContent = '0 shifts';
     return;
   }
-  let totalHrs = 0;
-  shifts.slice().reverse().forEach(s => {
-    const hrs = calcHours(s.start, s.end);
-    totalHrs += hrs;
-    const earned = hrs > 0 ? '£' + (hrs * RATE).toFixed(2) : '—';
-    const dur = hrs > 0 ? formatDuration(hrs) : '—';
-    const div = document.createElement('div');
-    div.className = 'shift-item';
-    div.innerHTML = `
-      <div class="shift-item-top">
-        <span class="shift-earned">${earned}</span>
-        <span class="shift-duration">${dur}</span>
-        <button class="del-btn" onclick="removeShift(${s.id})">✕</button>
-      </div>
-      <div class="shift-inputs">
-        <div class="shift-field"><label>Date</label><input type="date" value="${s.date}" onchange="updateShift(${s.id},'date',this.value)" /></div>
-        <div class="shift-field"><label>Start</label><input type="time" value="${s.start}" onchange="updateShift(${s.id},'start',this.value)" /></div>
-        <div class="shift-field"><label>End</label><input type="time" value="${s.end}" onchange="updateShift(${s.id},'end',this.value)" /></div>
-      </div>`;
-    list.appendChild(div);
+  let tot = 0;
+  shifts.slice().reverse().forEach(x => {
+    const h = hrs(x.s, x.e); tot += h;
+    const earn = h>0?'£'+(h*RATE).toFixed(2):'—', dur = h>0?fmt(h):'—';
+    const d = document.createElement('div');
+    d.className = 'shift-card';
+    d.innerHTML = `<div class="shift-top">
+      <span class="shift-earn">${earn}</span>
+      <span class="shift-dur">${dur}</span>
+      <button class="del" onclick="delShift(${x.id})">✕</button>
+    </div>
+    <div class="shift-fields">
+      <div class="sfield"><label>Date</label><input type="date" value="${x.d}" onchange="upd(${x.id},'d',this.value)"></div>
+      <div class="sfield"><label>Start</label><input type="time" value="${x.s}" onchange="upd(${x.id},'s',this.value)"></div>
+      <div class="sfield"><label>End</label><input type="time" value="${x.e}" onchange="upd(${x.id},'e',this.value)"></div>
+    </div>`;
+    el.appendChild(d);
   });
-  document.getElementById('shift-count').textContent = shifts.length + ' shift' + (shifts.length !== 1 ? 's' : '');
-  updateMetrics(totalHrs, totalHrs * RATE);
+  document.getElementById('s-count').textContent = shifts.length+' shift'+(shifts.length!==1?'s':'');
+  updateMetrics(tot, tot*RATE);
 }
-function recalc() {
-  const dateVal = document.getElementById('pay-date').value;
-  const freq = document.getElementById('pay-freq').value;
-  const block = document.getElementById('countdown-block');
-  if (!dateVal) { block.style.display = 'none'; return; }
+
+function calcPay() {
+  const dv = document.getElementById('paydate').value;
+  const fd = parseInt(document.getElementById('freq').value);
+  const wrap = document.getElementById('cd-wrap');
+  if (!dv) { wrap.style.display='none'; return; }
   const now = new Date(); now.setHours(0,0,0,0);
-  const pay = new Date(dateVal);
-  const diff = Math.ceil((pay - now) / 86400000);
-  block.style.display = 'block';
-  document.getElementById('cd-days').textContent = Math.max(0, diff);
-  document.getElementById('cd-date').textContent = pay.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  document.getElementById('m-days').textContent = Math.max(0, diff);
-  document.getElementById('m-days-sub').textContent = diff === 0 ? 'Payday!' : diff === 1 ? 'Tomorrow!' : 'days away';
-  const freqDays = freq === 'weekly' ? 7 : freq === 'fortnightly' ? 14 : null;
-  let html = '';
-  let d = new Date(pay);
-  for (let i = 0; i < 5; i++) {
-    if (i > 0) {
-      if (freq === 'monthly') d.setMonth(d.getMonth() + 1);
-      else d.setDate(d.getDate() + freqDays);
-    }
-    const label = d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
-    html += `<div class="upcoming-item"><span>${label}</span>${i === 0 ? '<span class="upcoming-badge">Next</span>' : '<span class="upcoming-muted">+' + (i * (freqDays || 30)) + 'd</span>'}</div>`;
+  const pay = new Date(dv);
+  const diff = Math.ceil((pay-now)/86400000);
+  wrap.style.display = 'block';
+  document.getElementById('cd-n').textContent = Math.max(0,diff);
+  document.getElementById('cd-d').textContent = pay.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('m-days').textContent = Math.max(0,diff);
+  document.getElementById('m-days-sub').textContent = diff===0?'Payday!':diff===1?'Tomorrow!':diff+' days away';
+  let html='', d=new Date(pay);
+  for(let i=0;i<5;i++){
+    if(i>0) d.setDate(d.getDate()+fd);
+    const lbl=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    html+=`<div class="urow"><span>${lbl}</span>${i===0?'<span class="nbadge">Next</span>':'<span class="ndim">+'+i*fd+'d</span>'}</div>`;
   }
-  document.getElementById('upcoming-list').innerHTML = html;
-  try { localStorage.setItem('pl_paydate', JSON.stringify({ date: dateVal, freq })); } catch(e) {}
+  document.getElementById('upcoming').innerHTML=html;
+  try { localStorage.setItem('plpaydate', JSON.stringify({d:dv,f:fd})); } catch(e){}
 }
-function switchTab(tab, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
-  btn.classList.add('active');
+
+function go(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab,.bnbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('p-'+tab).classList.add('on');
+  const idx = ['shifts','pay','stream'].indexOf(tab);
+  document.querySelectorAll('.tab')[idx].classList.add('on');
+  document.querySelectorAll('.bnbtn')[idx].classList.add('on');
 }
+
 try {
-  const saved = JSON.parse(localStorage.getItem('pl_paydate') || 'null');
-  if (saved) { document.getElementById('pay-date').value = saved.date; document.getElementById('pay-freq').value = saved.freq; recalc(); }
-} catch(e) {}
+  const sv = JSON.parse(localStorage.getItem('plpaydate')||'null');
+  if(sv){ document.getElementById('paydate').value=sv.d; document.getElementById('freq').value=sv.f; calcPay(); }
+} catch(e){}
+
 render();
 </script>
 </body>
