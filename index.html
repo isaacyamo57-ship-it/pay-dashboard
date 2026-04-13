@@ -119,6 +119,102 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
   .shift-fields .sfield:first-child { grid-column: span 2; }
   .period-rows { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── BUDGET TRACKER ── */
+.budget-wrap { padding: 4px 0; }
+.budget-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+.month-nav { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.month-nav::-webkit-scrollbar { display: none; }
+.mbtn { flex-shrink: 0; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg2); color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.mbtn.active { background: var(--green); color: #000; border-color: var(--green); font-weight: 700; }
+.inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.input-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; transition: border-color 0.2s; }
+.input-card:focus-within { border-color: var(--green); }
+.input-card.ab:focus-within { border-color: #60a5fa; }
+.input-card.aa:focus-within { border-color: var(--amber); }
+.input-card.ao:focus-within { border-color: #fb923c; }
+.input-card.ac:focus-within { border-color: #22d3ee; }
+.ic-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+.ic-input-row { display: flex; align-items: center; gap: 4px; }
+.ic-sym { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 700; color: var(--green); }
+.ic-sym.b { color: #60a5fa; } .ic-sym.a { color: var(--amber); } .ic-sym.o { color: #fb923c; } .ic-sym.c { color: #22d3ee; }
+input.ic-field { background: none; border: none; color: var(--text); font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; width: 100%; outline: none; }
+input.ic-field::placeholder { color: var(--muted2); }
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+.b-alert { border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; font-family: 'DM Mono', monospace; display: none; }
+.b-alert.show { display: block; }
+.b-alert.danger { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: var(--red); }
+.b-alert.warn { background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25); color: var(--amber); }
+.b-alert.ok { background: rgba(29,185,84,0.08); border: 1px solid rgba(29,185,84,0.2); color: var(--green); }
+.remaining-hero { background: var(--bg2); border: 2px solid var(--green); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+.rh-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.rh-value { font-family: 'DM Mono', monospace; font-size: 40px; font-weight: 700; color: var(--green); line-height: 1; }
+.rh-value.warn { color: var(--amber); } .rh-value.danger { color: var(--red); }
+.rh-sub { font-size: 12px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; }
+.budget-rule { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+.br-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.br-pill { font-family: 'DM Mono', monospace; font-size: 10px; background: var(--green-dim); color: var(--green); padding: 2px 8px; border-radius: 20px; }
+.br-bar-wrap { display: flex; height: 8px; border-radius: 20px; overflow: hidden; margin-bottom: 14px; gap: 2px; }
+.br-seg { height: 100%; border-radius: 4px; transition: width 0.4s; }
+.br-seg.needs { background: #60a5fa; } .br-seg.debt { background: #c084fc; } .br-seg.savings { background: var(--green); } .br-seg.wants { background: var(--amber); } .br-seg.gap { background: var(--bg3); }
+.br-rows { display: flex; flex-direction: column; gap: 6px; }
+.br-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.br-dot-label { display: flex; align-items: center; gap: 6px; flex: 1; color: var(--muted); }
+.br-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.br-pct { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); width: 32px; text-align: right; }
+.br-amt { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; width: 60px; text-align: right; }
+.b-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+.sec-hdr { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer; }
+.sec-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.sec-badge { display: flex; align-items: center; gap: 8px; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); }
+.chev { font-size: 10px; transition: transform 0.2s; display: inline-block; }
+.chev.open { transform: rotate(90deg); }
+.row-list { border-top: 1px solid var(--border); }
+.b-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.b-row:last-child { border-bottom: none; }
+.row-left { display: flex; align-items: center; gap: 10px; }
+.row-icon { font-size: 18px; }
+.row-name { font-size: 13px; font-weight: 500; }
+.row-meta { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.row-amt { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+.frozen-tag { font-size: 9px; background: rgba(91,156,246,0.15); color: #60a5fa; padding: 1px 5px; border-radius: 3px; border: 1px solid rgba(91,156,246,0.3); margin-left: 4px; }
+.collapse-body.hidden { display: none; }
+.debt-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.debt-hdr { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; margin-bottom: 14px; }
+.debt-item { margin-bottom: 16px; }
+.debt-item:last-child { margin-bottom: 0; }
+.debt-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.debt-name { font-size: 14px; font-weight: 600; }
+.debt-right { display: flex; align-items: center; gap: 10px; }
+.debt-owed { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.debt-input { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; padding: 6px 10px; width: 90px; outline: none; -webkit-appearance: none; appearance: none; }
+.debt-input:focus { border-color: var(--green); }
+.debt-bar-track { background: var(--bg3); border-radius: 20px; height: 6px; overflow: hidden; margin-bottom: 5px; }
+.debt-bar-fill { height: 100%; border-radius: 20px; transition: width 0.4s; }
+.debt-bar-fill.zilch { background: #c084fc; }
+.debt-bar-fill.klarna { background: #60a5fa; }
+.debt-bar-fill.fitness { background: #fb923c; }
+.debt-status { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.debt-status.cleared { color: var(--green); }
+.zilch-limit { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.zl-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'DM Mono', monospace; }
+.zl-row { display: flex; justify-content: space-between; padding: 7px 0; border-top: 1px solid var(--border); font-size: 13px; }
+.zl-row:first-of-type { border-top: none; }
+.zl-key { color: var(--muted); }
+.zl-val { font-family: 'DM Mono', monospace; font-weight: 500; }
+.zl-highlight { background: var(--bg3); border-radius: 10px; padding: 12px 14px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+.zl-hl-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.zl-hl-val { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 700; text-align: right; }
+.priority-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.p-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 14px; font-family: 'DM Mono', monospace; }
+.p-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
+.p-row:first-of-type { border-top: none; }
+.p-num { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; width: 24px; }
+.p-info { flex: 1; }
+.p-name { font-size: 13px; font-weight: 600; }
+.p-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.p-status { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; text-align: right; min-width: 60px; }
+
 </style>
 </head>
 <body>
@@ -158,6 +254,7 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
     <button class="tab on" onclick="go('shifts',this)">📋 Shifts</button>
     <button class="tab" onclick="go('pay',this)">📅 Pay dates</button>
     <button class="tab" onclick="go('stream',this)">⚡ Stream</button>
+    <button class="tab" onclick="go('budget',this)">💰 Budget</button>
   </div>
 
   <!-- SHIFTS -->
@@ -194,10 +291,136 @@ body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text
 
 </div>
 
+
+  <!-- BUDGET -->
+  <div id="p-budget" class="panel">
+    <div class="budget-wrap">
+      <div class="budget-eyebrow">Budget Tracker</div>
+
+      <div class="month-nav">
+        <button class="mbtn" onclick="setMonth(this)">APR</button>
+        <button class="mbtn active" onclick="setMonth(this)">MAY</button>
+        <button class="mbtn" onclick="setMonth(this)">JUN</button>
+        <button class="mbtn" onclick="setMonth(this)">JUL</button>
+        <button class="mbtn" onclick="setMonth(this)">AUG</button>
+        <button class="mbtn" onclick="setMonth(this)">SEP</button>
+      </div>
+
+      <div class="inputs-grid">
+        <div class="input-card">
+          <div class="ic-label"><span>💷</span> Income</div>
+          <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="346" placeholder="0" oninput="brecalc()"></div>
+        </div>
+        <div class="input-card ao">
+          <div class="ic-label"><span>⛽</span> Fuel</div>
+          <div class="ic-input-row"><span class="ic-sym o">£</span><input class="ic-field" type="number" id="b-fuel" value="30" placeholder="0" oninput="brecalc()"></div>
+        </div>
+        <div class="input-card ab">
+          <div class="ic-label"><span>📊</span> Apex</div>
+          <div class="ic-input-row"><span class="ic-sym b">£</span><input class="ic-field" type="number" id="b-apex" value="0" placeholder="0" oninput="brecalc()"></div>
+        </div>
+        <div class="input-card ac">
+          <div class="ic-label"><span>🏦</span> Savings</div>
+          <div class="ic-input-row"><span class="ic-sym c">£</span><input class="ic-field" type="number" id="b-savings" value="0" placeholder="0" oninput="brecalc()"></div>
+        </div>
+      </div>
+
+      <div class="b-alert" id="b-alert"></div>
+
+      <div class="remaining-hero">
+        <div class="rh-label">Left after everything</div>
+        <div class="rh-value" id="b-rhval">£0.00</div>
+        <div class="rh-sub" id="b-rhsub">Enter your income above to begin</div>
+      </div>
+
+      <div class="budget-rule">
+        <div class="br-title">Budget Breakdown <span class="br-pill">Isaac's Rule</span></div>
+        <div class="br-bar-wrap">
+          <div class="br-seg needs" id="b-barNeeds" style="width:0%"></div>
+          <div class="br-seg debt" id="b-barDebt" style="width:0%"></div>
+          <div class="br-seg savings" id="b-barSavings" style="width:0%"></div>
+          <div class="br-seg wants" id="b-barWants" style="width:0%"></div>
+          <div class="br-seg gap" id="b-barGap" style="width:100%"></div>
+        </div>
+        <div class="br-rows">
+          <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:#60a5fa"></div>Needs</div><div class="br-pct" id="b-pctNeeds">0%</div><div class="br-amt" style="color:#60a5fa" id="b-amtNeeds">£0</div></div>
+          <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:#c084fc"></div>Debt</div><div class="br-pct" id="b-pctDebt">0%</div><div class="br-amt" style="color:#c084fc" id="b-amtDebt">£0</div></div>
+          <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:var(--green)"></div>Savings</div><div class="br-pct" id="b-pctSavings">0%</div><div class="br-amt" style="color:var(--green)" id="b-amtSavings">£0</div></div>
+          <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:var(--amber)"></div>Wants</div><div class="br-pct" id="b-pctWants">0%</div><div class="br-amt" style="color:var(--amber)" id="b-amtWants">£0</div></div>
+        </div>
+      </div>
+
+      <div class="b-section">
+        <div class="sec-hdr" onclick="btoggle('bills', this)">
+          <div class="sec-title"><div class="br-dot" style="background:var(--red);width:10px;height:10px;border-radius:3px"></div>Fixed Bills</div>
+          <div class="sec-badge"><span id="b-totalBills">£204.56</span><span class="chev open" id="b-chev-bills">▶</span></div>
+        </div>
+        <div class="collapse-body" id="b-body-bills">
+          <div class="row-list">
+            <div class="b-row"><div class="row-left"><div class="row-icon">📱</div><div class="row-info"><div class="row-name">O2 + Vodafone</div><div class="row-meta">Fixed · monthly</div></div></div><div class="row-amt" style="color:var(--red)">-£75.57</div></div>
+            <div class="b-row"><div class="row-left"><div class="row-icon">🚗</div><div class="row-info"><div class="row-name">Car Insurance</div><div class="row-meta">Fixed · monthly</div></div></div><div class="row-amt" style="color:var(--red)">-£52.00</div></div>
+            <div class="b-row"><div class="row-left"><div class="row-icon">📈</div><div class="row-info"><div class="row-name">TradingView</div><div class="row-meta">Subscription · monthly</div></div></div><div class="row-amt" style="color:var(--red)">-£25.99</div></div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="b-section">
+        <div class="sec-hdr" onclick="btoggle('needs', this)">
+          <div class="sec-title"><div class="br-dot" style="background:#60a5fa;width:10px;height:10px;border-radius:3px"></div>Needs</div>
+          <div class="sec-badge"><span id="b-totalNeeds">—</span><span class="chev open" id="b-chev-needs">▶</span></div>
+        </div>
+        <div class="collapse-body" id="b-body-needs">
+          <div class="row-list">
+            <div class="b-row"><div class="row-left"><div class="row-icon">⛽</div><div class="row-info"><div class="row-name">Fuel</div><div class="row-meta">Klarna · manual input</div></div></div><div class="row-amt" style="color:#fb923c" id="b-fuelAmt">-£30.00</div></div>
+            <div class="b-row"><div class="row-left"><div class="row-icon">🍕</div><div class="row-info"><div class="row-name">Food / Fast Food</div><div class="row-meta">Zilch pay-now · est.</div></div></div><div class="row-amt" style="color:var(--amber)">-£50.00</div></div>
+            <div class="b-row"><div class="row-left"><div class="row-icon">📊</div><div class="row-info"><div class="row-name">Apex</div><div class="row-meta">Trading · manual input</div></div></div><div class="row-amt" style="color:#60a5fa" id="b-apexAmt">-£0.00</div></div>
+            <div class="b-row"><div class="row-left"><div class="row-icon">💹</div><div class="row-info"><div class="row-name">Trading 212</div><div class="row-meta">Investing · monthly</div></div></div><div class="row-amt" style="color:#22d3ee">-£20.00</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="debt-section">
+        <div class="debt-hdr">Debt Payments</div>
+        <div id="b-debt-list"></div>
+        <button class="add-btn" onclick="addDebt()" style="margin-top:10px;">+ Add debt</button>
+      </div>
+
+      <div class="zilch-limit">
+        <div class="zl-title">Where your money goes</div>
+        <div class="zl-row"><div class="zl-key">Income</div><div class="zl-val" id="b-zlIncome">£0.00</div></div>
+        <div class="zl-row"><div class="zl-key">Fixed bills</div><div class="zl-val" style="color:var(--red)" id="b-zlBills">-£0.00</div></div>
+        <div class="zl-row"><div class="zl-key">Needs (fuel, food, apex, t212)</div><div class="zl-val" style="color:var(--amber)" id="b-zlNeeds">-£0.00</div></div>
+        <div class="zl-row"><div class="zl-key">Debt payments</div><div class="zl-val" style="color:#c084fc" id="b-zlDebt">-£0.00</div></div>
+        <div class="zl-row"><div class="zl-key">Savings</div><div class="zl-val" style="color:#22d3ee" id="b-zlSavings">-£0.00</div></div>
+        <div class="zl-highlight">
+          <div>
+            <div class="zl-hl-label">Safe to spend</div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">after all outgoings</div>
+          </div>
+          <div>
+            <div class="zl-hl-val" id="b-zlMax" style="color:var(--green)">£0.00</div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right" id="b-zlWeekly">~£0 / week</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-block">
+        <div class="p-title">This Month's Priority Order</div>
+        <div class="p-row"><div class="p-num" style="color:var(--red)">1</div><div class="p-info"><div class="p-name">Fixed Bills</div><div class="p-desc">O2, Vodafone, car insurance, TradingView</div></div><div class="p-status" style="color:var(--red)" id="b-p1">£0</div></div>
+        <div class="p-row"><div class="p-num" style="color:#fb923c">2</div><div class="p-info"><div class="p-name">Fuel + Food + Apex</div><div class="p-desc">Essentials before anything else</div></div><div class="p-status" style="color:#fb923c" id="b-p2">—</div></div>
+        <div class="p-row"><div class="p-num" style="color:#c084fc">3</div><div class="p-info"><div class="p-name">Debt Clearance</div><div class="p-desc" id="b-p3desc">Add debts above to track</div></div><div class="p-status" style="color:#c084fc" id="b-p3">—</div></div>
+        <div class="p-row"><div class="p-num" style="color:#22d3ee">4</div><div class="p-info"><div class="p-name">Savings</div><div class="p-desc">Even £20 a month adds up</div></div><div class="p-status" style="color:#22d3ee" id="b-p4">£0</div></div>
+        <div class="p-row"><div class="p-num" style="color:var(--amber)">5</div><div class="p-info"><div class="p-name">Wants</div><div class="p-desc">Entertainment, shopping, eating out</div></div><div class="p-status" style="color:var(--amber)" id="b-p5">—</div></div>
+      </div>
+    </div>
+  </div>
+
 <div class="botnav">
   <button class="bnbtn on" onclick="go('shifts',this)"><span class="ico">📋</span>Shifts</button>
   <button class="bnbtn" onclick="go('pay',this)"><span class="ico">📅</span>Pay dates</button>
   <button class="bnbtn" onclick="go('stream',this)"><span class="ico">⚡</span>Stream</button>
+  <button class="bnbtn" onclick="go('budget',this)"><span class="ico">💰</span>Budget</button>
 </div>
 
 <script>
@@ -393,7 +616,7 @@ function go(tab, btn) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab,.bnbtn').forEach(b=>b.classList.remove('on'));
   document.getElementById('p-'+tab).classList.add('on');
-  const idx = ['shifts','pay','stream'].indexOf(tab);
+  const idx = ['shifts','pay','stream','budget'].indexOf(tab);
   document.querySelectorAll('.tab')[idx].classList.add('on');
   document.querySelectorAll('.bnbtn')[idx].classList.add('on');
 }
@@ -401,6 +624,132 @@ function go(tab, btn) {
 renderPaySchedule();
 updatePaydayMetric();
 render();
+
+// ── BUDGET TRACKER ──
+const B_FIXED = 75.57 + 52 + 25.99;
+const B_FOOD = 50, B_T212 = 20;
+const DEBT_COLORS = ['#c084fc','#60a5fa','#fb923c','#22d3ee','#f87171','#4ade80','#fbbf24'];
+let debts = [];
+try { debts = JSON.parse(localStorage.getItem('pl_debts') || '[]'); } catch(e) {}
+function saveDebts() { try { localStorage.setItem('pl_debts', JSON.stringify(debts)); } catch(e) {} }
+
+function addDebt() {
+  debts.push({ id: Date.now(), name: '', owed: 0, paying: 0 });
+  saveDebts(); renderDebts();
+}
+function removeDebt(id) { debts = debts.filter(d=>d.id!==id); saveDebts(); renderDebts(); brecalc(); }
+function updDebt(id, field, val) {
+  const d = debts.find(d=>d.id===id);
+  if(d) { d[field] = field==='name'?val:parseFloat(val)||0; saveDebts(); brecalc(); }
+}
+
+function renderDebts() {
+  const el = document.getElementById('b-debt-list');
+  el.innerHTML = '';
+  if(!debts.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted2);padding:10px 0;">No debts added yet</div>';
+    brecalc(); return;
+  }
+  debts.forEach((d,i) => {
+    const color = DEBT_COLORS[i % DEBT_COLORS.length];
+    const rem = Math.max(0, d.owed - d.paying);
+    const pct = d.owed > 0 ? Math.max(0, rem/d.owed*100) : 0;
+    const div = document.createElement('div');
+    div.className = 'debt-item';
+    div.innerHTML = `
+      <div class="debt-top">
+        <input style="background:none;border:none;border-bottom:1px solid var(--border2);color:${color};font-size:14px;font-weight:600;font-family:'Sora',sans-serif;outline:none;width:100px;padding:2px 0;" placeholder="Name..." value="${d.name}" onchange="updDebt(${d.id},'name',this.value)" />
+        <div class="debt-right">
+          <div class="debt-owed">Owed: £<input type="number" style="background:none;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;width:60px;outline:none;padding:2px 0;" value="${d.owed||''}" placeholder="0" min="0" onchange="updDebt(${d.id},'owed',this.value)" /></div>
+          <input class="debt-input" type="number" placeholder="£ paying" min="0" value="${d.paying||''}" oninput="updDebt(${d.id},'paying',this.value)" />
+          <button class="del" onclick="removeDebt(${d.id})" style="font-size:15px;">✕</button>
+        </div>
+      </div>
+      <div class="debt-bar-track"><div class="debt-bar-fill" style="width:${pct}%;background:${color};"></div></div>
+      <div class="debt-status ${rem===0?'cleared':''}">${rem===0?'✓ Cleared!':'£'+rem.toFixed(2)+' remaining'}</div>
+    `;
+    el.appendChild(div);
+  });
+  brecalc();
+}
+
+function bfmt(n) { return (n < 0 ? '-' : '') + '£' + Math.abs(n).toFixed(2); }
+function bpct(n, t) { return t ? Math.min(100, Math.max(0, n/t*100)) : 0; }
+
+function brecalc() {
+  const income = parseFloat(document.getElementById('b-income').value) || 0;
+  const fuel = parseFloat(document.getElementById('b-fuel').value) || 0;
+  const apex = parseFloat(document.getElementById('b-apex').value) || 0;
+  const sav = parseFloat(document.getElementById('b-savings').value) || 0;
+  const debt = debts.reduce((sum,d)=>sum+(d.paying||0), 0);
+  const totalDebtRem = debts.reduce((sum,d)=>sum+Math.max(0,d.owed-d.paying), 0);
+  const varNeeds = fuel+B_FOOD+apex+B_T212;
+  const totalNeeds = B_FIXED+varNeeds;
+  const afterAll = income-totalNeeds-debt-sav;
+  const rh = document.getElementById('b-rhval');
+  rh.textContent = bfmt(afterAll);
+  rh.className = 'rh-value'+(afterAll>=40?'':afterAll>=0?' warn':' danger');
+  document.getElementById('b-rhsub').textContent = afterAll>=40?'Looking healthy this month.':afterAll>=0?'Tight — watch spending.':'⚠ Overspent — reduce debt payments.';
+  const al = document.getElementById('b-alert');
+  if(!income){al.className='b-alert';al.innerHTML='';}
+  else if(afterAll<0){al.className='b-alert danger show';al.innerHTML='<strong>⚠ Deficit of '+bfmt(Math.abs(afterAll))+'</strong> — outgoings exceed income.';}
+  else if(afterAll<30){al.className='b-alert warn show';al.innerHTML='<strong>⚠ Very tight</strong> — only '+bfmt(afterAll)+' left.';}
+  else{al.className='b-alert ok show';al.innerHTML='<strong>✓ On track</strong> — '+bfmt(afterAll)+' available after all costs.';}
+  document.getElementById('b-totalNeeds').textContent = bfmt(varNeeds);
+  document.getElementById('b-fuelAmt').textContent = '-£'+fuel.toFixed(2);
+  document.getElementById('b-apexAmt').textContent = '-£'+apex.toFixed(2);
+  const nP=bpct(totalNeeds,income),dP=bpct(debt,income),sP=bpct(sav,income),wP=Math.max(0,bpct(afterAll,income)),gP=Math.max(0,100-nP-dP-sP-wP);
+  document.getElementById('b-barNeeds').style.width=nP+'%';
+  document.getElementById('b-barDebt').style.width=dP+'%';
+  document.getElementById('b-barSavings').style.width=sP+'%';
+  document.getElementById('b-barWants').style.width=wP+'%';
+  document.getElementById('b-barGap').style.width=gP+'%';
+  document.getElementById('b-pctNeeds').textContent=Math.round(nP)+'%';
+  document.getElementById('b-pctDebt').textContent=Math.round(dP)+'%';
+  document.getElementById('b-pctSavings').textContent=Math.round(sP)+'%';
+  document.getElementById('b-pctWants').textContent=Math.round(wP)+'%';
+  document.getElementById('b-amtNeeds').textContent=bfmt(totalNeeds);
+  document.getElementById('b-amtDebt').textContent=bfmt(debt);
+  document.getElementById('b-amtSavings').textContent=bfmt(sav);
+  document.getElementById('b-amtWants').textContent=bfmt(Math.max(0,afterAll));
+  document.getElementById('b-zlIncome').textContent=bfmt(income);
+  document.getElementById('b-zlBills').textContent='-'+bfmt(B_FIXED);
+  document.getElementById('b-zlNeeds').textContent='-'+bfmt(varNeeds);
+  document.getElementById('b-zlDebt').textContent='-'+bfmt(debt);
+  document.getElementById('b-zlSavings').textContent='-'+bfmt(sav);
+  const mz=Math.max(0,afterAll);
+  const weekly=mz/4;
+  const zm=document.getElementById('b-zlMax');
+  zm.textContent=bfmt(mz); zm.style.color=mz>=60?'var(--green)':mz>=20?'var(--amber)':'var(--red)';
+  document.getElementById('b-zlWeekly').textContent='~'+bfmt(weekly)+' / week';
+  document.getElementById('b-p1').textContent=bfmt(B_FIXED);
+  document.getElementById('b-p2').textContent=bfmt(varNeeds);
+  if(debts.length>0){
+    const debtNames = debts.map(d=>d.name||'Unnamed').join(' → ');
+    const debtDesc = document.getElementById('b-p3desc');
+    if(debtDesc) debtDesc.textContent = debtNames;
+    document.getElementById('b-p3').textContent=totalDebtRem>0?bfmt(totalDebtRem)+' left':'✓ All clear!';
+  } else {
+    document.getElementById('b-p3').textContent='No debts added';
+  }
+  document.getElementById('b-p4').textContent=sav>0?bfmt(sav):'£0';
+  document.getElementById('b-p5').textContent=afterAll>0?bfmt(afterAll)+' avail':'£0';
+}
+
+function btoggle(id, hdr) {
+  const body=document.getElementById('b-body-'+id);
+  const chev=document.getElementById('b-chev-'+id);
+  body.classList.toggle('hidden');
+  chev.classList.toggle('open');
+}
+
+function setMonth(btn) {
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+renderDebts();
+
 </script>
 </body>
 </html>
