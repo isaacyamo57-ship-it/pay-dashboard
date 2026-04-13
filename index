@@ -8,93 +8,34 @@
 <meta name="apple-mobile-web-app-title" content="PL Pay">
 <meta name="theme-color" content="#0d0d0d">
 <title>PL Pay</title>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d0d0d'/%3E%3Ccircle cx='50' cy='50' r='32' fill='%231db954'/%3E%3Ctext x='50' y='58' font-family='system-ui' font-size='28' font-weight='700' text-anchor='middle' fill='%23000'%3E%C2%A3%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green: #1db954;
-    --green-dark: #148a3d;
-    --green-dim: rgba(29,185,84,0.12);
-    --bg: #0d0d0d;
-    --bg2: #141414;
-    --bg3: #1c1c1c;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #f0f0f0;
-    --muted: #888;
-    --muted2: #555;
-    --amber: #f5a623;
-    --amber-dim: rgba(245,166,35,0.12);
-    --red: #e74c3c;
-    --red-dim: rgba(231,76,60,0.12);
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --green: #1db954; --green-dark: #148a3d; --green-dim: rgba(29,185,84,0.12);
+    --bg: #0d0d0d; --bg2: #141414; --bg3: #1c1c1c;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f0; --muted: #888; --muted2: #555;
+    --amber: #f5a623; --amber-dim: rgba(245,166,35,0.12);
+    --red: #e74c3c; --red-dim: rgba(231,76,60,0.12);
+    --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overflow: hidden; }
-  body {
-    font-family: 'Sora', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-  }
-
-  /* TOPBAR */
-  .topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: calc(var(--safe-top) + 14px) 20px 14px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
+  html, body { height: 100%; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
   .brand { display: flex; align-items: center; gap: 10px; }
-  .brand-icon {
-    width: 34px; height: 34px; background: var(--green);
-    border-radius: 9px; display: flex; align-items: center; justify-content: center;
-  }
+  .brand-icon { width: 34px; height: 34px; background: var(--green); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
   .brand-icon span { font-size: 18px; font-weight: 700; color: #000; line-height: 1; }
   .brand-name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
   .brand-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
-  .rate-badge {
-    font-family: 'DM Mono', monospace; font-size: 12px;
-    background: var(--green-dim); color: var(--green);
-    padding: 5px 11px; border-radius: 20px;
-    border: 1px solid rgba(29,185,84,0.25);
-  }
-
-  /* SCROLL AREA */
-  .scroll-area {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 18px 16px calc(var(--safe-bottom) + 80px);
-  }
-
-  /* BOTTOM NAV */
-  .bottom-nav {
-    display: flex;
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    padding-bottom: var(--safe-bottom);
-    flex-shrink: 0;
-  }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    gap: 4px; padding: 10px 0; background: none; border: none;
-    color: var(--muted); font-family: 'Sora', sans-serif; cursor: pointer;
-    font-size: 11px; transition: color 0.15s;
-  }
+  .rate-badge { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--green-dim); color: var(--green); padding: 5px 11px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.25); }
+  .scroll-area { flex: 1; overflow-y: auto; padding: 18px 16px 100px; }
+  .bottom-nav { display: flex; background: var(--bg2); border-top: 1px solid var(--border); position: sticky; bottom: 0; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: none; border: none; color: var(--muted); font-family: 'Sora', sans-serif; cursor: pointer; font-size: 11px; transition: color 0.15s; }
   .nav-btn .icon { font-size: 20px; }
   .nav-btn.active { color: var(--green); }
-
-  /* METRICS */
   .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-  .metric {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px; position: relative; overflow: hidden;
-  }
+  .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
   .metric::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
   .metric.green::before { background: var(--green); }
   .metric.amber::before { background: var(--amber); }
@@ -106,73 +47,35 @@
   .metric.amber .metric-value { color: var(--amber); }
   .metric.blue .metric-value { color: #5b9cf6; }
   .metric-sub { font-size: 10px; color: var(--muted); margin-top: 5px; font-family: 'DM Mono', monospace; }
-
-  /* PANELS */
   .panel { display: none; }
   .panel.active { display: block; }
-
-  /* CARD */
   .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
   .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .card-title { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
-
-  /* SHIFT TABLE */
   .shift-list { display: flex; flex-direction: column; gap: 10px; }
-  .shift-item {
-    background: var(--bg3); border-radius: 10px; padding: 12px;
-    border: 1px solid var(--border);
-  }
+  .shift-item { background: var(--bg3); border-radius: 10px; padding: 12px; border: 1px solid var(--border); }
   .shift-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
   .shift-earned { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green); }
   .shift-duration { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
   .shift-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .shift-field label { font-size: 10px; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
-  .shift-field input {
-    width: 100%; background: var(--bg); border: 1px solid var(--border2);
-    border-radius: 8px; color: var(--text); font-size: 13px;
-    font-family: 'DM Mono', monospace; padding: 8px; outline: none;
-    -webkit-appearance: none;
-  }
+  .shift-field input { width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 13px; font-family: 'DM Mono', monospace; padding: 8px; outline: none; -webkit-appearance: none; }
   .shift-field input:focus { border-color: var(--green); }
-  .del-btn {
-    background: none; border: none; cursor: pointer; color: var(--muted2);
-    font-size: 18px; padding: 2px 6px; border-radius: 6px;
-  }
-  .add-shift-btn {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    background: none; border: 1px dashed var(--border2); border-radius: 10px;
-    color: var(--muted); font-size: 14px; font-family: 'Sora', sans-serif;
-    padding: 13px; cursor: pointer; width: 100%; margin-top: 4px;
-  }
+  .del-btn { background: none; border: none; cursor: pointer; color: var(--muted2); font-size: 18px; padding: 2px 6px; border-radius: 6px; }
+  .add-shift-btn { display: flex; align-items: center; justify-content: center; gap: 6px; background: none; border: 1px dashed var(--border2); border-radius: 10px; color: var(--muted); font-size: 14px; font-family: 'Sora', sans-serif; padding: 13px; cursor: pointer; width: 100%; margin-top: 4px; }
   .empty-state { text-align: center; padding: 28px; color: var(--muted2); font-size: 13px; }
-
-  /* FORM */
   .form-group { margin-bottom: 14px; }
   .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; display: block; }
-  select, input[type="date"].pay-input {
-    width: 100%; background: var(--bg3); border: 1px solid var(--border2);
-    border-radius: 10px; color: var(--text); font-size: 15px;
-    font-family: 'Sora', sans-serif; padding: 12px 14px; outline: none;
-    -webkit-appearance: none; appearance: none;
-  }
+  select, input[type="date"].pay-input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 15px; font-family: 'Sora', sans-serif; padding: 12px 14px; outline: none; -webkit-appearance: none; appearance: none; }
   select:focus, input[type="date"].pay-input:focus { border-color: var(--green); }
-
-  /* COUNTDOWN */
-  .countdown-block {
-    text-align: center; padding: 24px 16px;
-    background: var(--green-dim); border: 1px solid rgba(29,185,84,0.2);
-    border-radius: 12px; margin: 16px 0;
-  }
+  .countdown-block { text-align: center; padding: 24px 16px; background: var(--green-dim); border: 1px solid rgba(29,185,84,0.2); border-radius: 12px; margin: 16px 0; }
   .countdown-number { font-size: 56px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--green); line-height: 1; }
   .countdown-label { font-size: 13px; color: var(--muted); margin-top: 6px; }
   .countdown-date { font-size: 14px; font-weight: 500; margin-top: 6px; color: var(--text); }
-
   .upcoming-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid var(--border); font-size: 14px; }
   .upcoming-item:first-child { border-top: none; }
   .upcoming-badge { font-size: 11px; background: var(--green-dim); color: var(--green); padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(29,185,84,0.2); }
   .upcoming-muted { font-family: 'DM Mono', monospace; color: var(--muted); font-size: 12px; }
-
-  /* STREAM */
   .stream-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-top: 1px solid var(--border); font-size: 14px; }
   .stream-row:first-child { border-top: none; }
   .stream-row-label { color: var(--muted); }
@@ -183,16 +86,13 @@
   .stream-total { border-top: 1px solid var(--border2) !important; }
   .stream-total .stream-row-label { font-weight: 600; color: var(--text); font-size: 15px; }
   .stream-total .stream-row-value { font-size: 22px; }
-
   .progress-bar { background: var(--bg3); border-radius: 20px; height: 8px; overflow: hidden; margin: 14px 0 7px; }
   .progress-fill { height: 100%; background: var(--green); border-radius: 20px; transition: width 0.4s ease; }
   .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted2); font-family: 'DM Mono', monospace; }
-
   .stream-tip { background: var(--amber-dim); border: 1px solid rgba(245,166,35,0.2); border-radius: 10px; padding: 13px 15px; font-size: 13px; color: var(--amber); margin-top: 14px; line-height: 1.55; }
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="brand">
     <div class="brand-icon"><span>£</span></div>
@@ -203,9 +103,7 @@
   </div>
   <div class="rate-badge">£11.44/hr</div>
 </div>
-
 <div class="scroll-area">
-
   <div class="metrics">
     <div class="metric green">
       <div class="metric-label">Earned</div>
@@ -223,22 +121,16 @@
       <div class="metric-sub" id="m-days-sub">Set your pay date in Pay dates tab</div>
     </div>
   </div>
-
-  <!-- SHIFTS -->
   <div id="panel-shifts" class="panel active">
     <div class="card">
       <div class="card-header">
         <span class="card-title">Shift log</span>
         <span id="shift-count" style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">0 shifts</span>
       </div>
-      <div id="shift-list">
-        <div class="empty-state">No shifts yet — tap below to add one</div>
-      </div>
+      <div id="shift-list"><div class="empty-state">No shifts yet — add one below</div></div>
       <button class="add-shift-btn" onclick="addShift()">+ Add shift</button>
     </div>
   </div>
-
-  <!-- PAY DATES -->
   <div id="panel-paydates" class="panel">
     <div class="card">
       <div class="card-header"><span class="card-title">Pay settings</span></div>
@@ -264,8 +156,6 @@
       </div>
     </div>
   </div>
-
-  <!-- STREAM -->
   <div id="panel-stream" class="panel">
     <div class="card">
       <div class="card-header"><span class="card-title">Stream early access</span></div>
@@ -276,36 +166,21 @@
       <div class="stream-row"><span class="stream-row-label">Still get at payday</span><span class="stream-row-value amber" id="s-remain">£0.00</span></div>
       <div class="progress-bar"><div class="progress-fill" id="s-bar" style="width:0%"></div></div>
       <div class="progress-labels"><span>£0</span><span id="s-bar-mid">You get: £0.00</span><span id="s-bar-max">Total: £0.00</span></div>
-      <div class="stream-tip">Stream gives you up to 50% of your earned pay early. The £1.95 fee is already deducted above so you see exactly what hits your account.</div>
+      <div class="stream-tip">Stream gives you up to 50% of your earned pay early. The £1.95 fee is already deducted so you see exactly what hits your account.</div>
     </div>
   </div>
-
 </div>
-
-<!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <button class="nav-btn active" id="nav-shifts" onclick="switchTab('shifts', this)">
-    <span class="icon">📋</span>Shifts
-  </button>
-  <button class="nav-btn" id="nav-paydates" onclick="switchTab('paydates', this)">
-    <span class="icon">📅</span>Pay dates
-  </button>
-  <button class="nav-btn" id="nav-stream" onclick="switchTab('stream', this)">
-    <span class="icon">⚡</span>Stream
-  </button>
+  <button class="nav-btn active" onclick="switchTab('shifts', this)"><span class="icon">📋</span>Shifts</button>
+  <button class="nav-btn" onclick="switchTab('paydates', this)"><span class="icon">📅</span>Pay dates</button>
+  <button class="nav-btn" onclick="switchTab('stream', this)"><span class="icon">⚡</span>Stream</button>
 </div>
-
 <script>
 const RATE = 11.44;
 const STREAM_FEE = 1.95;
 let shifts = [];
-
 try { shifts = JSON.parse(localStorage.getItem('pl_shifts_v3') || '[]'); } catch(e) { shifts = []; }
-
-function save() {
-  try { localStorage.setItem('pl_shifts_v3', JSON.stringify(shifts)); } catch(e) {}
-}
-
+function save() { try { localStorage.setItem('pl_shifts_v3', JSON.stringify(shifts)); } catch(e) {} }
 function calcHours(start, end) {
   if (!start || !end) return 0;
   const [sh, sm] = start.split(':').map(Number);
@@ -314,35 +189,24 @@ function calcHours(start, end) {
   if (mins < 0) mins += 1440;
   return mins / 60;
 }
-
 function formatDuration(hrs) {
   const h = Math.floor(hrs);
   const m = Math.round((hrs - h) * 60);
   return h + 'h ' + (m < 10 ? '0' + m : m) + 'm';
 }
-
 function addShift() {
   const today = new Date().toISOString().split('T')[0];
   shifts.push({ id: Date.now(), date: today, start: '', end: '' });
-  save();
-  render();
+  save(); render();
 }
-
-function removeShift(id) {
-  shifts = shifts.filter(s => s.id !== id);
-  save();
-  render();
-}
-
+function removeShift(id) { shifts = shifts.filter(s => s.id !== id); save(); render(); }
 function updateShift(id, field, val) {
   const s = shifts.find(s => s.id === id);
   if (s) { s[field] = val; save(); render(); }
 }
-
 function updateMetrics(totalHrs, earned) {
   const stream = earned * 0.5;
   const actual = Math.max(0, stream - STREAM_FEE);
-
   document.getElementById('m-earned').textContent = '£' + earned.toFixed(2);
   document.getElementById('m-hours').textContent = formatDuration(totalHrs) + ' logged';
   document.getElementById('m-stream').textContent = '£' + actual.toFixed(2);
@@ -355,25 +219,21 @@ function updateMetrics(totalHrs, earned) {
   document.getElementById('s-bar-mid').textContent = 'You get: £' + actual.toFixed(2);
   document.getElementById('s-bar-max').textContent = 'Total: £' + earned.toFixed(2);
 }
-
 function render() {
   const list = document.getElementById('shift-list');
   list.innerHTML = '';
-
   if (shifts.length === 0) {
-    list.innerHTML = '<div class="empty-state">No shifts yet — tap below to add one</div>';
+    list.innerHTML = '<div class="empty-state">No shifts yet — add one below</div>';
     updateMetrics(0, 0);
     document.getElementById('shift-count').textContent = '0 shifts';
     return;
   }
-
   let totalHrs = 0;
   shifts.slice().reverse().forEach(s => {
     const hrs = calcHours(s.start, s.end);
     totalHrs += hrs;
     const earned = hrs > 0 ? '£' + (hrs * RATE).toFixed(2) : '—';
     const dur = hrs > 0 ? formatDuration(hrs) : '—';
-
     const div = document.createElement('div');
     div.className = 'shift-item';
     div.innerHTML = `
@@ -383,43 +243,28 @@ function render() {
         <button class="del-btn" onclick="removeShift(${s.id})">✕</button>
       </div>
       <div class="shift-inputs">
-        <div class="shift-field">
-          <label>Date</label>
-          <input type="date" value="${s.date}" onchange="updateShift(${s.id},'date',this.value)" />
-        </div>
-        <div class="shift-field">
-          <label>Start</label>
-          <input type="time" value="${s.start}" onchange="updateShift(${s.id},'start',this.value)" />
-        </div>
-        <div class="shift-field">
-          <label>End</label>
-          <input type="time" value="${s.end}" onchange="updateShift(${s.id},'end',this.value)" />
-        </div>
-      </div>
-    `;
+        <div class="shift-field"><label>Date</label><input type="date" value="${s.date}" onchange="updateShift(${s.id},'date',this.value)" /></div>
+        <div class="shift-field"><label>Start</label><input type="time" value="${s.start}" onchange="updateShift(${s.id},'start',this.value)" /></div>
+        <div class="shift-field"><label>End</label><input type="time" value="${s.end}" onchange="updateShift(${s.id},'end',this.value)" /></div>
+      </div>`;
     list.appendChild(div);
   });
-
   document.getElementById('shift-count').textContent = shifts.length + ' shift' + (shifts.length !== 1 ? 's' : '');
   updateMetrics(totalHrs, totalHrs * RATE);
 }
-
 function recalc() {
   const dateVal = document.getElementById('pay-date').value;
   const freq = document.getElementById('pay-freq').value;
   const block = document.getElementById('countdown-block');
   if (!dateVal) { block.style.display = 'none'; return; }
-
   const now = new Date(); now.setHours(0,0,0,0);
   const pay = new Date(dateVal);
   const diff = Math.ceil((pay - now) / 86400000);
-
   block.style.display = 'block';
   document.getElementById('cd-days').textContent = Math.max(0, diff);
   document.getElementById('cd-date').textContent = pay.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   document.getElementById('m-days').textContent = Math.max(0, diff);
   document.getElementById('m-days-sub').textContent = diff === 0 ? 'Payday!' : diff === 1 ? 'Tomorrow!' : 'days away';
-
   const freqDays = freq === 'weekly' ? 7 : freq === 'fortnightly' ? 14 : null;
   let html = '';
   let d = new Date(pay);
@@ -429,31 +274,21 @@ function recalc() {
       else d.setDate(d.getDate() + freqDays);
     }
     const label = d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
-    html += `<div class="upcoming-item">
-      <span>${label}</span>
-      ${i === 0 ? '<span class="upcoming-badge">Next</span>' : '<span class="upcoming-muted">+' + (i * (freqDays || 30)) + 'd</span>'}
-    </div>`;
+    html += `<div class="upcoming-item"><span>${label}</span>${i === 0 ? '<span class="upcoming-badge">Next</span>' : '<span class="upcoming-muted">+' + (i * (freqDays || 30)) + 'd</span>'}</div>`;
   }
   document.getElementById('upcoming-list').innerHTML = html;
   try { localStorage.setItem('pl_paydate', JSON.stringify({ date: dateVal, freq })); } catch(e) {}
 }
-
 function switchTab(tab, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
   btn.classList.add('active');
 }
-
 try {
   const saved = JSON.parse(localStorage.getItem('pl_paydate') || 'null');
-  if (saved) {
-    document.getElementById('pay-date').value = saved.date;
-    document.getElementById('pay-freq').value = saved.freq;
-    recalc();
-  }
+  if (saved) { document.getElementById('pay-date').value = saved.date; document.getElementById('pay-freq').value = saved.freq; recalc(); }
 } catch(e) {}
-
 render();
 </script>
 </body>
