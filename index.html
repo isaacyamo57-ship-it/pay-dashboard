@@ -309,6 +309,14 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
   <div id="p-budget" class="panel">
     <div class="budget-eyebrow">Budget Tracker</div>
 
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <span class="card-title">Total income breakdown</span>
+        <button onclick="syncIncomeFromShifts()" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,84,0.3);border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;padding:4px 10px;cursor:pointer;">↻ Sync</button>
+      </div>
+      <div id="income-breakdown"><div style="font-size:13px;color:var(--muted2);text-align:center;padding:10px 0;">Log shifts to see your income breakdown</div></div>
+    </div>
+
     <div class="month-nav">
       <button class="mbtn" onclick="setMonth(this)">APR</button>
       <button class="mbtn active" onclick="setMonth(this)">MAY</button>
@@ -320,9 +328,9 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 
     <div class="inputs-grid">
       <div class="input-card">
-        <div class="ic-label" style="justify-content:space-between;"><span style="display:flex;align-items:center;gap:5px;"><span>💷</span> Income</span><button onclick="syncIncomeFromShifts()" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,84,0.3);border-radius:6px;font-size:9px;font-family:'DM Mono',monospace;padding:2px 7px;cursor:pointer;letter-spacing:0.05em;">↻ SYNC</button></div>
+        <div class="ic-label"><span>💷</span> Income</div>
         <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="0" placeholder="0" oninput="brecalc()"></div>
-        <div id="b-income-sub" style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:5px;">tap ↻ to pull from shifts</div>
+        <div id="b-income-sub" style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:5px;">auto-synced from shifts</div>
       </div>
       <div class="input-card ao">
         <div class="ic-label"><span>⛽</span> Fuel</div>
@@ -762,17 +770,15 @@ function updDebt(id,f,v){
 
 
 function syncIncomeFromShifts(){
-  // Calculate total earned from logged shifts
   let totalHrs = 0;
-  shifts.forEach(s => {
-    const h = hrs(s.s, s.e);
-    totalHrs += h;
-  });
+  shifts.forEach(s => { totalHrs += hrs(s.s, s.e); });
   const earned = totalHrs * RATE;
+  const withdrawn = withdrawals.reduce((s,w)=>s+w.amt, 0);
+  const totalFees = withdrawals.length * 1.95;
+  const paydayAmt = Math.max(0, earned - withdrawn - totalFees);
   const input = document.getElementById('b-income');
   if(input){
     input.value = earned.toFixed(2);
-    // Update sub label
     const sub = document.getElementById('b-income-sub');
     if(sub){
       if(earned > 0){
@@ -785,6 +791,47 @@ function syncIncomeFromShifts(){
     }
     brecalc();
   }
+  // Update the income breakdown card
+  renderIncomeBreakdown(earned, withdrawn, totalFees, paydayAmt);
+}
+
+function renderIncomeBreakdown(earned, withdrawn, totalFees, paydayAmt){
+  const el = document.getElementById('income-breakdown');
+  if(!el) return;
+  if(earned === 0){
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted2);text-align:center;padding:10px 0;">Log shifts to see your income breakdown</div>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="srow" style="border:none;padding-top:0;">
+      <span class="srow-lbl">Total earned this period</span>
+      <span class="srow-val" style="color:var(--text);">£${earned.toFixed(2)}</span>
+    </div>
+    <div class="srow">
+      <span class="srow-lbl">Already received via Stream</span>
+      <span class="srow-val" style="color:var(--amber);">${withdrawn>0?'£'+withdrawn.toFixed(2):'£0.00'}</span>
+    </div>
+    <div class="srow">
+      <span class="srow-lbl">Stream fees (${withdrawals.length} × £1.95)</span>
+      <span class="srow-val r">${totalFees>0?'− £'+totalFees.toFixed(2):'£0.00'}</span>
+    </div>
+    <div class="srow" style="border-top:1px solid var(--border2);margin-top:4px;">
+      <span class="srow-lbl" style="color:var(--text);font-weight:600;font-size:15px;">Landing on payday</span>
+      <span class="srow-val" style="color:var(--green);font-size:22px;">£${paydayAmt.toFixed(2)}</span>
+    </div>
+    <div style="margin-top:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;">
+        <span>Stream received</span><span>Payday</span>
+      </div>
+      <div style="display:flex;height:8px;border-radius:20px;overflow:hidden;gap:2px;">
+        <div style="background:var(--amber);border-radius:4px;width:${earned>0?Math.min(100,(withdrawn/earned)*100):0}%;transition:width 0.4s;"></div>
+        <div style="background:var(--green);border-radius:4px;flex:1;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:5px;">
+        <span>£${withdrawn.toFixed(2)}</span><span>£${paydayAmt.toFixed(2)}</span>
+      </div>
+    </div>
+  `;
 }
 
 function bfmt(n){return(n<0?'-':'')+'£'+Math.abs(n).toFixed(2);}
