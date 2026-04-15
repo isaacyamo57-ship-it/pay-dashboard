@@ -327,10 +327,10 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
     </div>
 
     <div class="inputs-grid">
-      <div class="input-card">
-        <div class="ic-label"><span>💷</span> Income</div>
-        <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="0" placeholder="0" oninput="brecalc()"></div>
-        <div id="b-income-sub" style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:5px;">auto-synced from shifts</div>
+      <div class="input-card" style="opacity:0.85;">
+        <div class="ic-label"><span>💷</span> Income <span style="font-size:8px;background:var(--green-dim);color:var(--green);padding:1px 5px;border-radius:4px;margin-left:4px;">AUTO</span></div>
+        <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="0" placeholder="0" readonly style="cursor:default;opacity:0.8;"></div>
+        <div id="b-income-sub" style="font-size:10px;color:var(--green);font-family:'DM Mono',monospace;margin-top:5px;">synced from shifts</div>
       </div>
       <div class="input-card ao">
         <div class="ic-label"><span>⛽</span> Fuel</div>
@@ -568,6 +568,7 @@ function render(){
   document.getElementById('s-count').textContent=shifts.length+' shift'+(shifts.length!==1?'s':'');
   updateMetrics(tot,tot*RATE);
   checkPeriodReset();
+  syncIncomeFromShifts();
 }
 
 // ── STREAM WITHDRAWALS ──
@@ -778,12 +779,13 @@ function syncIncomeFromShifts(){
   const paydayAmt = Math.max(0, earned - withdrawn - totalFees);
   const input = document.getElementById('b-income');
   if(input){
-    input.value = earned.toFixed(2);
+    // Income = what actually lands in your account (payday amount, not full earned)
+    input.value = paydayAmt.toFixed(2);
     const sub = document.getElementById('b-income-sub');
     if(sub){
       if(earned > 0){
-        sub.textContent = totalHrs.toFixed(1)+'hrs · '+shifts.length+' shift'+(shifts.length!==1?'s':'')+' logged';
-        sub.style.color = 'var(--green)';
+        sub.textContent = 'full pay £'+earned.toFixed(2)+' · after stream & fees';
+        sub.style.color = withdrawn > 0 ? 'var(--amber)' : 'var(--green)';
       } else {
         sub.textContent = 'no shifts logged yet';
         sub.style.color = 'var(--muted)';
@@ -908,6 +910,7 @@ render();
 renderBills();
 renderDebts();
 renderWithdrawals();
+syncIncomeFromShifts();
 </script>
 </body>
 </html>
