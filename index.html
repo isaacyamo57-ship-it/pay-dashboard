@@ -3,239 +3,277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d0d0d">
+<meta name="theme-color" content="#f8fafc">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>PL Pay — Isaac</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --green:#1db954;--green-dim:rgba(29,185,84,0.12);
-  --bg:#0d0d0d;--bg2:#141414;--bg3:#1c1c1c;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#f0f0f0;--muted:#777;--muted2:#444;
-  --amber:#f5a623;--amber-dim:rgba(245,166,35,0.1);
-  --red:#e74c3c;--blue:#5b9cf6;--purple:#c084fc;--cyan:#22d3ee;
+  --green:#059669;--green-light:#d1fae5;--green-mid:#a7f3d0;--green-dim:rgba(5,150,105,0.08);
+  --bg:#f8fafc;--bg2:#ffffff;--bg3:#f1f5f9;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--muted:#64748b;--muted2:#94a3b8;
+  --amber:#d97706;--amber-light:#fef3c7;--amber-dim:rgba(217,119,6,0.08);
+  --red:#dc2626;--red-light:#fee2e2;--red-dim:rgba(220,38,38,0.08);
+  --blue:#2563eb;--blue-light:#dbeafe;--blue-dim:rgba(37,99,235,0.08);
+  --purple:#7c3aed;--purple-light:#ede9fe;
+  --cyan:#0891b2;--cyan-light:#cffafe;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.04);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{height:100%;}
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:99;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:99;box-shadow:var(--shadow);}
 .brand{display:flex;align-items:center;gap:10px;}
-.brand-icon{width:34px;height:34px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#000;}
-.brand-name{font-size:16px;font-weight:600;letter-spacing:-0.3px;}
-.brand-sub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
-.rate-pill{font-family:'DM Mono',monospace;font-size:12px;background:var(--green-dim);color:var(--green);padding:5px 12px;border-radius:20px;border:1px solid rgba(29,185,84,0.25);}
-.content{flex:1;padding:18px 16px 90px;max-width:700px;margin:0 auto;width:100%;}
+.brand-icon{width:36px;height:36px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;box-shadow:0 2px 8px rgba(5,150,105,0.3);}
+.brand-name{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.4px;}
+.brand-sub{font-size:11px;color:var(--muted);}
+.rate-pill{font-family:'DM Mono',monospace;font-size:11px;background:var(--blue-light);color:var(--blue);padding:5px 12px;border-radius:20px;font-weight:500;}
+.theme-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:14px;padding:5px 10px;cursor:pointer;}
+
+/* CONTENT */
+.content{flex:1;padding:20px 16px 100px;max-width:680px;margin:0 auto;width:100%;}
 
 /* METRICS */
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.metric{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden;}
-.metric::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.metric.g::after{background:var(--green);}.metric.a::after{background:var(--amber);}.metric.b::after{background:var(--blue);}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+.metric{background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
 .metric.full{grid-column:span 2;}
-.mlabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
-.mval{font-size:24px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:-1px;}
-.metric.g .mval{color:var(--green);}.metric.a .mval{color:var(--amber);}.metric.b .mval{color:var(--blue);}
-.msub{font-size:10px;color:var(--muted);margin-top:5px;font-family:'DM Mono',monospace;}
+.metric-icon{font-size:22px;margin-bottom:8px;display:block;}
+.mlabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.mval{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:-0.5px;}
+.metric.g .mval{color:var(--green);}
+.metric.a .mval{color:var(--amber);}
+.metric.b .mval{color:var(--blue);}
+.msub{font-size:10px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;}
+.metric-accent{position:absolute;bottom:0;left:0;right:0;height:3px;}
+.metric.g .metric-accent{background:linear-gradient(90deg,var(--green),#34d399);}
+.metric.a .metric-accent{background:linear-gradient(90deg,var(--amber),#fbbf24);}
+.metric.b .metric-accent{background:linear-gradient(90deg,var(--blue),#60a5fa);}
 
 /* TABS */
-.tabs{display:flex;gap:5px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none;}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{flex-shrink:0;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;text-align:center;transition:all 0.15s;white-space:nowrap;}
-.tab.on{background:var(--green-dim);border-color:rgba(29,185,84,0.3);color:var(--green);font-weight:500;}
+.tabs-wrap{background:#fff;border-radius:14px;padding:5px;margin-bottom:20px;box-shadow:var(--shadow);display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;}
+.tabs-wrap::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:9px 14px;border-radius:10px;color:var(--muted);font-size:12px;font-weight:500;font-family:'Sora',sans-serif;cursor:pointer;border:none;background:transparent;transition:all 0.15s;white-space:nowrap;}
+.tab.on{background:var(--green);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(5,150,105,0.25);}
 .panel{display:none;}.panel.on{display:block;}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.card-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
 
-/* CUTOFF BANNER */
-.cutoff-warn{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
-.cutoff-warn-text{font-size:12px;color:var(--red);font-family:'DM Mono',monospace;}
+/* CARDS */
+.card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;}
+
+/* BANNERS */
+.cutoff-warn{background:var(--red-light);border:1px solid #fca5a5;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.cutoff-warn-text{font-size:12px;color:var(--red);font-family:'DM Mono',monospace;font-weight:500;}
+.reset-banner{background:var(--amber-light);border:1px solid #fcd34d;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.reset-text{font-size:12px;color:var(--amber);font-family:'DM Mono',monospace;font-weight:500;}
+.reset-btn{background:var(--amber);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;}
 
 /* SHIFTS */
-.shift-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
-.shift-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.shift-earn{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--green);}
-.shift-dur{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
-.shift-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:8px;}
-.sfield label{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;}
-.sfield input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:8px 7px;outline:none;-webkit-appearance:none;appearance:none;}
-.sfield input:focus{border-color:var(--green);}
+.shift-card{background:var(--bg3);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border);}
+.shift-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.shift-earn{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--green);}
+.shift-stream{font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);font-weight:500;margin-left:8px;}
+.shift-dur{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:#fff;padding:3px 8px;border-radius:6px;border:1px solid var(--border);}
+.shift-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+.sfield label{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;font-weight:500;}
+.sfield input{width:100%;background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:8px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color 0.15s;}
+.sfield input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-dim);}
 .sfield.notes-field{grid-column:span 3;}
 .sfield.notes-field input{font-family:'Sora',sans-serif;font-size:12px;}
-.del{background:none;border:none;color:var(--muted2);font-size:17px;cursor:pointer;padding:2px 5px;border-radius:5px;}
-.del:hover{color:var(--red);}
-.add-btn{width:100%;margin-top:10px;padding:13px;background:none;border:1px dashed var(--border2);border-radius:10px;color:var(--muted);font-size:14px;font-family:'Sora',sans-serif;cursor:pointer;}
-.add-btn:hover{border-color:var(--green);color:var(--green);}
-.empty{text-align:center;padding:30px;color:var(--muted2);font-size:13px;}
-
-/* PERIOD RESET */
-.reset-banner{background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.25);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
-.reset-text{font-size:12px;color:var(--red);font-family:'DM Mono',monospace;}
-.reset-btn{background:var(--red);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;}
+.del{background:var(--red-dim);border:none;color:var(--red);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:background 0.15s;}
+.del:hover{background:var(--red-light);}
+.add-btn{width:100%;margin-top:10px;padding:13px;background:transparent;border:2px dashed var(--border2);border-radius:12px;color:var(--muted);font-size:14px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:500;transition:all 0.15s;}
+.add-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+.empty{text-align:center;padding:32px;color:var(--muted2);font-size:13px;}
+.export-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:11px;font-family:'DM Mono',monospace;padding:6px 12px;cursor:pointer;font-weight:500;}
+.export-btn:hover{border-color:var(--green);color:var(--green);}
 
 /* PERIOD SUMMARY */
-.period-sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;}
+.period-sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .psum-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;}
-.psum-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
-.psum-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;}
+.psum-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-weight:500;}
+.psum-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;}
 .psum-sub{font-size:10px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;}
 
 /* PAY SCHEDULE */
-.pay-period-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;}
-.pay-period-card.current{border-color:rgba(29,185,84,0.4);background:var(--green-dim);}
-.pay-period-card.next{border-color:rgba(91,156,246,0.4);}
+.cd-box{background:var(--green-dim);border:2px solid var(--green-mid);border-radius:16px;text-align:center;padding:28px;margin-bottom:16px;}
+.cd-num{font-size:64px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green);line-height:1;}
+.cd-lbl{font-size:13px;color:var(--muted);margin-top:8px;}
+.cd-date{font-size:15px;font-weight:600;color:var(--text);margin-top:6px;}
+.pay-period-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.pay-period-card.current{border-color:var(--green);background:var(--green-dim);}
+.pay-period-card.next{border-color:var(--blue);background:var(--blue-dim);}
 .period-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.period-month{font-size:15px;font-weight:600;color:var(--text);}
-.period-badge{font-size:11px;padding:3px 9px;border-radius:20px;font-family:'DM Mono',monospace;}
-.badge-current{background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,84,0.3);}
-.badge-next{background:rgba(91,156,246,0.12);color:var(--blue);border:1px solid rgba(91,156,246,0.3);}
+.period-month{font-size:15px;font-weight:700;color:var(--text);}
+.period-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.badge-current{background:var(--green-light);color:var(--green);}
+.badge-next{background:var(--blue-light);color:var(--blue);}
 .period-rows{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .prow{font-size:12px;}
-.prow-label{color:var(--muted);margin-bottom:2px;}
-.prow-val{font-family:'DM Mono',monospace;color:var(--text);font-size:13px;}
-.prow-val.green{color:var(--green);font-weight:500;font-size:15px;}
+.prow-label{color:var(--muted);margin-bottom:2px;font-weight:500;}
+.prow-val{font-family:'DM Mono',monospace;color:var(--text);font-size:12px;}
+.prow-val.green{color:var(--green);font-weight:700;font-size:14px;}
 .prow-val.red{color:var(--red);}
-.cd-box{background:var(--green-dim);border:1px solid rgba(29,185,84,0.2);border-radius:12px;text-align:center;padding:24px;margin-bottom:16px;}
-.cd-num{font-size:60px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green);line-height:1;}
-.cd-lbl{font-size:13px;color:var(--muted);margin-top:6px;}
-.cd-date{font-size:14px;font-weight:500;color:var(--text);margin-top:6px;}
 
 /* STREAM */
+.stream-hero{background:var(--green-dim);border:2px solid var(--green-mid);border-radius:16px;padding:22px;margin-bottom:14px;text-align:center;}
+.sh-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-weight:600;}
+.sh-amount{font-size:54px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green);line-height:1;}
+.sh-sub{font-size:12px;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;}
+.sh-stats{display:flex;justify-content:space-around;margin-top:18px;padding-top:16px;border-top:1px solid var(--green-mid);}
+.sh-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;font-weight:500;}
+.sh-stat-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;}
 .srow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border);font-size:14px;}
 .srow:first-child{border-top:none;}
-.srow-lbl{color:var(--muted);}
-.srow-val{font-family:'DM Mono',monospace;font-weight:500;}
+.srow-lbl{color:var(--muted);font-weight:500;}
+.srow-val{font-family:'DM Mono',monospace;font-weight:600;}
 .srow-val.g{color:var(--green);}.srow-val.a{color:var(--amber);}.srow-val.r{color:var(--red);}
-.srow.total{border-top:1px solid var(--border2)!important;}
-.srow.total .srow-lbl{color:var(--text);font-weight:600;font-size:15px;}
+.srow.total{border-top:2px solid var(--border2)!important;}
+.srow.total .srow-lbl{color:var(--text);font-weight:700;font-size:15px;}
 .srow.total .srow-val{font-size:22px;}
 .pbar{background:var(--bg3);border-radius:20px;height:8px;overflow:hidden;margin:14px 0 7px;}
 .pfill{height:100%;background:var(--green);border-radius:20px;transition:width 0.4s;}
 .plabels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;}
-.tip{background:var(--amber-dim);border:1px solid rgba(245,166,35,0.2);border-radius:10px;padding:13px 15px;font-size:13px;color:var(--amber);margin-top:14px;line-height:1.55;}
+.tip{background:var(--amber-light);border:1px solid #fcd34d;border-radius:12px;padding:13px 15px;font-size:13px;color:var(--amber);margin-top:14px;line-height:1.55;font-weight:500;}
 .sw-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border);font-size:13px;}
 .sw-item:first-child{border-top:none;}
-.sw-inputs{display:flex;gap:8px;align-items:center;margin-top:10px;}
-.sw-inputs input{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;padding:8px 10px;outline:none;-webkit-appearance:none;appearance:none;}
-.sw-add-btn{background:var(--green);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;}
+.sw-inputs{display:flex;gap:8px;align-items:center;margin-top:12px;}
+.sw-inputs input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;padding:9px 11px;outline:none;-webkit-appearance:none;appearance:none;}
+.sw-inputs input:focus{border-color:var(--green);}
+.sw-add-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;box-shadow:0 2px 8px rgba(5,150,105,0.25);}
 
 /* BUDGET */
-.budget-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:16px;}
-.month-nav{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;}
+.budget-eyebrow{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;}
+.month-nav{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
 .month-nav::-webkit-scrollbar{display:none;}
-.mbtn{flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg2);color:var(--muted);cursor:pointer;transition:all 0.15s;}
-.mbtn.active{background:var(--green);color:#000;border-color:var(--green);font-weight:700;}
+.mbtn{flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-weight:600;transition:all 0.15s;}
+.mbtn.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 2px 8px rgba(5,150,105,0.25);}
 .inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
-.input-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;transition:border-color 0.2s;}
-.input-card:focus-within{border-color:var(--green);}
-.input-card.ab:focus-within{border-color:#60a5fa;}.input-card.ao:focus-within{border-color:#fb923c;}.input-card.ac:focus-within{border-color:var(--cyan);}
-.ic-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.input-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;transition:border-color 0.2s;box-shadow:var(--shadow);}
+.input-card:focus-within{border-color:var(--green);box-shadow:0 0 0 3px var(--green-dim);}
+.input-card.ab:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-dim);}
+.input-card.ao:focus-within{border-color:var(--amber);}
+.input-card.ac:focus-within{border-color:var(--cyan);}
+.ic-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:5px;font-weight:600;}
 .ic-input-row{display:flex;align-items:center;gap:4px;}
-.ic-sym{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--green);}
-.ic-sym.b{color:#60a5fa;}.ic-sym.o{color:#fb923c;}.ic-sym.c{color:var(--cyan);}
-input.ic-field{background:none;border:none;color:var(--text);font-family:'DM Mono',monospace;font-size:18px;font-weight:500;width:100%;outline:none;}
+.ic-sym{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--green);}
+.ic-sym.b{color:var(--blue);}.ic-sym.o{color:var(--amber);}.ic-sym.c{color:var(--cyan);}
+input.ic-field{background:none;border:none;color:var(--text);font-family:'DM Mono',monospace;font-size:20px;font-weight:700;width:100%;outline:none;}
 input.ic-field::placeholder{color:var(--muted2);}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
-.b-alert{border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;line-height:1.6;font-family:'DM Mono',monospace;display:none;}
+.b-alert{border-radius:12px;padding:13px 16px;margin-bottom:14px;font-size:13px;line-height:1.6;font-weight:500;display:none;}
 .b-alert.show{display:block;}
-.b-alert.danger{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);color:var(--red);}
-.b-alert.warn{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.25);color:var(--amber);}
-.b-alert.ok{background:rgba(29,185,84,0.08);border:1px solid rgba(29,185,84,0.2);color:var(--green);}
-.remaining-hero{background:var(--bg2);border:2px solid var(--green);border-radius:12px;padding:18px;margin-bottom:18px;}
-.rh-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.rh-value{font-family:'DM Mono',monospace;font-size:40px;font-weight:700;color:var(--green);line-height:1;}
-.rh-value.warn{color:var(--amber);}.rh-value.danger{color:var(--red);}
-.rh-sub{font-size:12px;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace;}
-.budget-rule{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;}
-.br-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
-.br-pill{font-family:'DM Mono',monospace;font-size:10px;background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:20px;}
-.br-bar-wrap{display:flex;height:8px;border-radius:20px;overflow:hidden;margin-bottom:14px;gap:2px;}
-.br-seg{height:100%;border-radius:4px;transition:width 0.4s;}
+.b-alert.danger{background:var(--red-light);border:1px solid #fca5a5;color:var(--red);}
+.b-alert.warn{background:var(--amber-light);border:1px solid #fcd34d;color:var(--amber);}
+.b-alert.ok{background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);}
+.remaining-hero{background:var(--green);border-radius:16px;padding:22px;margin-bottom:18px;color:#fff;box-shadow:0 4px 16px rgba(5,150,105,0.3);}
+.rh-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-bottom:8px;font-weight:600;}
+.rh-value{font-family:'DM Mono',monospace;font-size:44px;font-weight:700;color:#fff;line-height:1;}
+.rh-value.warn{color:#fef3c7;}.rh-value.danger{color:#fecaca;}
+.rh-sub{font-size:13px;opacity:0.8;margin-top:6px;font-weight:500;}
+.budget-rule{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
+.br-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.br-pill{font-size:10px;background:var(--green-light);color:var(--green);padding:3px 10px;border-radius:20px;font-weight:600;}
+.br-bar-wrap{display:flex;height:10px;border-radius:20px;overflow:hidden;margin-bottom:16px;gap:2px;}
+.br-seg{height:100%;border-radius:5px;transition:width 0.4s;}
 .br-seg.needs{background:#60a5fa;}.br-seg.debt{background:var(--purple);}.br-seg.savings{background:var(--green);}.br-seg.wants{background:var(--amber);}.br-seg.gap{background:var(--bg3);}
-.br-rows{display:flex;flex-direction:column;gap:6px;}
-.br-row{display:flex;align-items:center;gap:8px;font-size:13px;}
-.br-dot-label{display:flex;align-items:center;gap:6px;flex:1;color:var(--muted);}
-.br-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
-.br-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:32px;text-align:right;}
-.br-amt{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;width:60px;text-align:right;}
-.b-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
-.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;}
-.sec-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;}
-.sec-badge{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);}
-.chev{font-size:10px;transition:transform 0.2s;display:inline-block;}
+.br-rows{display:flex;flex-direction:column;gap:8px;}
+.br-row{display:flex;align-items:center;gap:10px;font-size:13px;}
+.br-dot-label{display:flex;align-items:center;gap:8px;flex:1;color:var(--muted);font-weight:500;}
+.br-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.br-pct{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);width:34px;text-align:right;}
+.br-amt{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;width:64px;text-align:right;}
+.b-section{background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;cursor:pointer;transition:background 0.15s;}
+.sec-hdr:hover{background:var(--bg3);}
+.sec-title{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;}
+.sec-badge{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);font-weight:600;}
+.chev{font-size:10px;transition:transform 0.2s;display:inline-block;color:var(--muted);}
 .chev.open{transform:rotate(90deg);}
 .collapse-body.hidden{display:none;}
-.bill-item{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--border);}
-.bill-item input[type="text"]{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:7px 10px;outline:none;}
+.bill-item{display:flex;align-items:center;gap:8px;padding:10px 18px;border-top:1px solid var(--border);}
+.bill-item input[type="text"]{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:7px 10px;outline:none;}
 .bill-item input[type="text"]:focus{border-color:var(--green);}
-.bill-item input[type="number"]{width:80px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:7px 8px;outline:none;-webkit-appearance:none;appearance:none;}
-.bill-item input[type="date"]{width:130px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace;padding:7px 8px;outline:none;}
+.bill-item input[type="number"]{width:80px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:7px 8px;outline:none;-webkit-appearance:none;appearance:none;}
+.bill-item input[type="date"]{width:130px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace;padding:7px 8px;outline:none;}
 .bill-item input:focus{border-color:var(--green);}
-.bill-emoji{font-size:18px;width:26px;text-align:center;}
-.bill-due-soon{color:var(--red);font-size:10px;font-family:'DM Mono',monospace;}
-.debt-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
-.debt-hdr{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'DM Mono',monospace;margin-bottom:14px;}
-.debt-item{margin-bottom:16px;}
+.bill-due-soon{color:var(--red);font-size:10px;font-family:'DM Mono',monospace;font-weight:600;background:var(--red-light);padding:2px 7px;border-radius:4px;}
+.debt-section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow);}
+.debt-hdr{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;font-weight:700;margin-bottom:14px;}
+.debt-item{margin-bottom:18px;background:var(--bg3);border-radius:10px;padding:14px;border:1px solid var(--border);}
 .debt-item:last-child{margin-bottom:0;}
-.debt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.debt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .debt-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.debt-owed{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
-.debt-input{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;padding:6px 10px;width:85px;outline:none;-webkit-appearance:none;appearance:none;}
+.debt-owed{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);font-weight:500;}
+.debt-input{background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;padding:7px 10px;width:90px;outline:none;-webkit-appearance:none;appearance:none;}
 .debt-input:focus{border-color:var(--green);}
-.debt-bar-track{background:var(--bg3);border-radius:20px;height:6px;overflow:hidden;margin-bottom:5px;}
+.debt-bar-track{background:var(--border);border-radius:20px;height:6px;overflow:hidden;margin-bottom:6px;}
 .debt-bar-fill{height:100%;border-radius:20px;transition:width 0.4s;}
-.debt-status{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
-.debt-status.cleared{color:var(--green);}
-.zl-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
-.zl-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.06em;font-family:'DM Mono',monospace;}
-.zl-row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);font-size:13px;}
+.debt-status{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);font-weight:500;}
+.debt-status.cleared{color:var(--green);font-weight:700;}
+.zl-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow);}
+.zl-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em;}
+.zl-row{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border);font-size:13px;}
 .zl-row:first-of-type{border-top:none;}
-.zl-key{color:var(--muted);}
-.zl-val{font-family:'DM Mono',monospace;font-weight:500;}
-.zl-highlight{background:var(--bg3);border-radius:10px;padding:12px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;}
-.zl-hl-label{font-size:13px;font-weight:600;color:var(--text);}
-.zl-hl-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-.zl-hl-val{font-family:'DM Mono',monospace;font-size:24px;font-weight:700;text-align:right;}
-.zl-hl-sub2{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right;}
-.priority-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
-.p-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;}
-.p-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--border);}
+.zl-key{color:var(--muted);font-weight:500;}
+.zl-val{font-family:'DM Mono',monospace;font-weight:600;}
+.zl-highlight{background:var(--green);border-radius:12px;padding:14px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;}
+.zl-hl-label{font-size:14px;font-weight:700;color:#fff;}
+.zl-hl-sub{font-size:10px;opacity:0.7;color:#fff;margin-top:2px;}
+.zl-hl-val{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#fff;text-align:right;}
+.zl-hl-sub2{font-family:'DM Mono',monospace;font-size:11px;opacity:0.7;color:#fff;text-align:right;margin-top:2px;}
+.priority-block{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow);}
+.p-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:14px;}
+.p-row{display:flex;align-items:center;gap:14px;padding:11px 0;border-top:1px solid var(--border);}
 .p-row:first-of-type{border-top:none;}
-.p-num{font-family:'DM Mono',monospace;font-size:20px;font-weight:700;width:24px;}
+.p-num{font-family:'DM Mono',monospace;font-size:22px;font-weight:700;width:28px;}
 .p-info{flex:1;}
 .p-name{font-size:13px;font-weight:600;}
 .p-desc{font-size:11px;color:var(--muted);margin-top:2px;}
-.p-status{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;text-align:right;min-width:60px;}
-
-/* TAX CARD */
-.tax-card{background:rgba(91,156,246,0.08);border:1px solid rgba(91,156,246,0.2);border-radius:12px;padding:16px;margin-bottom:12px;}
-.tax-title{font-size:11px;font-weight:500;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
-.tax-row{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid rgba(91,156,246,0.1);font-size:13px;}
+.p-status{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;text-align:right;min-width:64px;}
+.tax-card{background:var(--blue-dim);border:1px solid #bfdbfe;border-radius:14px;padding:16px;margin-bottom:12px;}
+.tax-title{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.tax-row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid #bfdbfe;font-size:13px;}
 .tax-row:first-of-type{border-top:none;}
-.tax-key{color:var(--muted);}
-.tax-val{font-family:'DM Mono',monospace;font-weight:500;}
+.tax-key{color:var(--muted);font-weight:500;}
+.tax-val{font-family:'DM Mono',monospace;font-weight:600;}
 .tax-note{font-size:11px;color:var(--muted);margin-top:10px;font-family:'DM Mono',monospace;line-height:1.5;}
-
-/* COMPARE CARD */
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
 .cmp-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;}
-.cmp-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
-.cmp-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;}
-.cmp-delta{font-family:'DM Mono',monospace;font-size:11px;margin-top:4px;}
+.cmp-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;font-weight:600;}
+.cmp-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;}
+.cmp-delta{font-family:'DM Mono',monospace;font-size:11px;margin-top:4px;font-weight:600;}
 .cmp-delta.up{color:var(--green);}.cmp-delta.down{color:var(--red);}
 
-/* EXPORT */
-.export-btn{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:6px;}
-.export-btn:hover{border-color:var(--green);color:var(--green);}
+/* MORE TAB */
+.stream-notify{background:var(--green-light);border:1px solid var(--green-mid);border-radius:14px;padding:16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.payday-hero{background:var(--green);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(5,150,105,0.25);}
+.payday-step{display:flex;justify-content:space-between;align-items:center;padding:11px 4px;border-top:1px solid var(--border);font-size:13px;}
+.payday-final{background:var(--amber-light);border:1px solid #fcd34d;border-radius:12px;padding:14px 16px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;}
+.spend-bar{display:flex;height:6px;border-radius:20px;overflow:hidden;gap:1px;margin-bottom:12px;}
+.spend-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--border);font-size:13px;}
+.spend-row:first-child{border-top:none;}
+.owe-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--border);}
+.owe-row:first-child{border-top:none;}
+.owe-paid-btn{font-size:11px;padding:5px 10px;border-radius:7px;cursor:pointer;font-family:'DM Mono',monospace;font-weight:600;border:none;}
+.inp-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.inp-row input,.inp-row select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 11px;outline:none;font-family:'Sora',sans-serif;}
+.inp-row input:focus,.inp-row select:focus{border-color:var(--green);}
+.green-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;box-shadow:0 2px 8px rgba(5,150,105,0.25);}
 
-.botnav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg2);border-top:1px solid var(--border);z-index:99;}
-.bnbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 12px;background:none;border:none;color:var(--muted);font-family:'Sora',sans-serif;font-size:10px;cursor:pointer;transition:color 0.15s;}
+/* INCOME BREAKDOWN */
+.income-breakdown-card{background:var(--green-dim);border:1px solid var(--green-mid);border-radius:14px;padding:18px;margin-bottom:14px;}
+
+/* BOTTOM NAV */
+.botnav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--border);z-index:99;box-shadow:0 -2px 10px rgba(0,0,0,0.06);}
+.bnbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 13px;background:none;border:none;color:var(--muted2);font-family:'Sora',sans-serif;font-size:10px;cursor:pointer;font-weight:500;transition:color 0.15s;}
 .bnbtn .ico{font-size:18px;}
 .bnbtn.on{color:var(--green);}
-
-/* DARK/LIGHT TOGGLE */
-body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.13);--text:#111;--muted:#666;--muted2:#aaa;}
-.theme-toggle{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-size:14px;padding:4px 9px;cursor:pointer;}
 
 @media(max-width:480px){
   .shift-fields{grid-template-columns:1fr 1fr;}
@@ -243,11 +281,86 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
   .period-rows{grid-template-columns:1fr 1fr;}
   .period-sum-grid{grid-template-columns:1fr 1fr;}
   .compare-grid{grid-template-columns:1fr 1fr;}
+  .inp-row{flex-direction:column;}
+  .inp-row input,.inp-row select{width:100%;}
 }
+
+
+/* ── ANIMATED BG ── */
+.bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+.content,.topbar,.botnav{position:relative;z-index:1;}
+
+/* Light mode bg - subtle floating orbs */
+body:not(.dark) .bg-canvas{background:linear-gradient(135deg,#f0fdf4 0%,#f8fafc 50%,#eff6ff 100%);}
+
+/* ── DARK MODE ── */
+body.dark{
+  --green:#2ecc71;--green-light:rgba(46,204,113,0.12);--green-mid:rgba(46,204,113,0.2);--green-dim:rgba(46,204,113,0.07);
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1c1c1c;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#f0f0f0;--muted:#888;--muted2:#555;
+  --amber:#f5a623;--amber-light:rgba(245,166,35,0.1);--amber-dim:rgba(245,166,35,0.07);
+  --red:#e74c3c;--red-light:rgba(231,76,60,0.1);--red-dim:rgba(231,76,60,0.07);
+  --blue:#5b9cf6;--blue-light:rgba(91,156,246,0.1);--blue-dim:rgba(91,156,246,0.07);
+  --purple:#c084fc;--purple-light:rgba(192,132,252,0.1);
+  --cyan:#22d3ee;--cyan-light:rgba(34,211,238,0.1);
+  --shadow:0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.4);
+}
+body.dark .topbar{background:rgba(20,20,20,0.85);backdrop-filter:blur(12px);border-color:var(--border);}
+body.dark .botnav{background:rgba(20,20,20,0.9);backdrop-filter:blur(12px);border-color:var(--border);}
+body.dark .card{background:var(--bg2);border:1px solid var(--border);box-shadow:none;}
+body.dark .metric{background:var(--bg2);border:1px solid var(--border);box-shadow:none;}
+body.dark .tabs-wrap{background:var(--bg2);border:1px solid var(--border);box-shadow:none;}
+body.dark .shift-card{background:var(--bg3);border-color:var(--border);}
+body.dark .sfield input{background:var(--bg);border-color:var(--border2);color:var(--text);}
+body.dark .b-section{background:var(--bg2);border-color:var(--border);}
+body.dark .sec-hdr:hover{background:var(--bg3);}
+body.dark .bill-item input{background:var(--bg3);border-color:var(--border2);color:var(--text);}
+body.dark .debt-section,.debt-item{background:var(--bg2);}
+body.dark .debt-item{background:var(--bg3);border-color:var(--border);}
+body.dark .debt-input{background:var(--bg);border-color:var(--border2);color:var(--text);}
+body.dark .zl-card,.priority-block,.budget-rule,.tax-card{background:var(--bg2);border-color:var(--border);}
+body.dark .zl-card{background:var(--bg2);border-color:var(--border);}
+body.dark .priority-block{background:var(--bg2);border-color:var(--border);}
+body.dark .budget-rule{background:var(--bg2);border-color:var(--border);}
+body.dark .input-card{background:var(--bg2);border-color:var(--border);}
+body.dark .psum-card,.cmp-card{background:var(--bg3);border-color:var(--border);}
+body.dark .pay-period-card{background:var(--bg2);border-color:var(--border);box-shadow:none;}
+body.dark .sw-inputs input{background:var(--bg3);border-color:var(--border2);color:var(--text);}
+body.dark .mbtn{background:var(--bg2);border-color:var(--border);color:var(--muted);}
+body.dark #sp-name,body.dark #sp-amt,body.dark #sp-cat,body.dark #ome-name,body.dark #ome-amt,body.dark #ome-note,body.dark #io-name,body.dark #io-amt,body.dark #io-note{background:var(--bg3);border-color:var(--border2);color:var(--text);}
+body.dark .remaining-hero{box-shadow:0 4px 20px rgba(46,204,113,0.2);}
+body.dark .zl-highlight{background:rgba(46,204,113,0.15);border-radius:12px;}
+body.dark .br-seg.gap{background:var(--bg3);}
+body.dark .debt-bar-track{background:var(--border);}
+body.dark .export-btn{background:var(--bg3);border-color:var(--border2);color:var(--muted);}
+body.dark .rate-pill{background:rgba(46,204,113,0.12);color:var(--green);}
+body.dark .theme-btn{background:var(--bg2);border-color:var(--border);color:var(--muted);}
+body.dark .income-breakdown-card{background:rgba(46,204,113,0.05);border-color:rgba(46,204,113,0.15);}
+body.dark .stream-hero{background:rgba(46,204,113,0.05);border-color:rgba(46,204,113,0.15);}
+body.dark .cd-box{background:rgba(46,204,113,0.05);border-color:rgba(46,204,113,0.15);}
+body.dark .stream-notify{background:rgba(46,204,113,0.06);border-color:rgba(46,204,113,0.2);}
+body.dark .tax-card{background:rgba(91,156,246,0.05);border-color:rgba(91,156,246,0.12);}
+body.dark .cutoff-warn{background:rgba(231,76,60,0.08);border-color:rgba(231,76,60,0.2);}
+body.dark .reset-banner{background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.2);}
+body.dark .tip{background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.2);}
+body.dark .b-alert.ok{background:rgba(46,204,113,0.08);border-color:rgba(46,204,113,0.2);}
+body.dark .b-alert.warn{background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.2);}
+body.dark .b-alert.danger{background:rgba(231,76,60,0.08);border-color:rgba(231,76,60,0.2);}
+body.dark .pay-period-card.current{background:rgba(46,204,113,0.06);border-color:rgba(46,204,113,0.25);}
+body.dark .pay-period-card.next{background:rgba(91,156,246,0.06);border-color:rgba(91,156,246,0.2);}
+body.dark .add-btn{border-color:var(--border2);color:var(--muted);}
+body.dark .add-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+body.dark .bg-canvas{background:#0d0d0d;}
+body.dark .sw-add-btn{box-shadow:0 2px 8px rgba(46,204,113,0.2);}
+body.dark .tab.on{box-shadow:0 2px 8px rgba(46,204,113,0.2);}
+
 </style>
 </head>
 <body>
 
+<canvas class="bg-canvas" id="bgCanvas"></canvas>
 <div class="topbar">
   <div class="brand">
     <div class="brand-icon">£</div>
@@ -257,8 +370,8 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
-    <div class="rate-pill">£11.44/hr</div>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
+    <div class="rate-pill">£11.44 / hr</div>
   </div>
 </div>
 
@@ -266,23 +379,33 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
 
   <div class="metrics">
     <div class="metric g">
-      <div class="mlabel">Earned</div>
+      <span class="metric-icon">💰</span>
+      <div class="mlabel">Earned this period</div>
       <div class="mval" id="m-earned">£0.00</div>
       <div class="msub" id="m-hrs">0h 0m logged</div>
+      <div class="metric-accent"></div>
     </div>
     <div class="metric a">
+      <span class="metric-icon">⚡</span>
       <div class="mlabel">Stream available</div>
       <div class="mval" id="m-stream">£0.00</div>
       <div class="msub">50% of earned</div>
+      <div class="metric-accent"></div>
     </div>
     <div class="metric b full">
-      <div class="mlabel">Days to payday</div>
-      <div class="mval" id="m-days">—</div>
-      <div class="msub" id="m-days-sub">Loading...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="mlabel">Days to payday</div>
+          <div class="mval" id="m-days">—</div>
+          <div class="msub" id="m-days-sub">Loading...</div>
+        </div>
+        <span style="font-size:40px;">📅</span>
+      </div>
+      <div class="metric-accent"></div>
     </div>
   </div>
 
-  <div class="tabs">
+  <div class="tabs-wrap">
     <button class="tab on" onclick="go('shifts',this)">📋 Shifts</button>
     <button class="tab" onclick="go('pay',this)">📅 Pay dates</button>
     <button class="tab" onclick="go('stream',this)">⚡ Stream</button>
@@ -296,24 +419,22 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
       <span class="cutoff-warn-text" id="cutoff-warn-text">⚠ Timesheet cutoff is soon!</span>
     </div>
     <div id="period-reset-banner" style="display:none" class="reset-banner">
-      <span class="reset-text">New pay period started — clear old shifts?</span>
-      <button class="reset-btn" onclick="resetShifts()">Clear shifts</button>
+      <span class="reset-text">New pay period — clear old shifts?</span>
+      <button class="reset-btn" onclick="resetShifts()">Clear</button>
     </div>
     <div class="card">
       <div class="card-head">
         <span class="card-title">Shift log</span>
         <div style="display:flex;gap:8px;align-items:center;">
-          <button class="export-btn" onclick="exportCSV()">↓ CSV</button>
-          <span id="s-count" style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">0 shifts</span>
+          <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+          <span id="s-count" style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;font-weight:600;">0 shifts</span>
         </div>
       </div>
       <div id="shift-list"><div class="empty">No shifts yet — add one below</div></div>
       <button class="add-btn" onclick="addShift()">+ Add shift</button>
     </div>
-
-    <!-- PERIOD SUMMARY -->
     <div class="card">
-      <div class="card-head"><span class="card-title">Period summary by month</span></div>
+      <div class="card-head"><span class="card-title">Period summary</span></div>
       <div id="period-summary"><div class="empty" style="padding:10px 0;">Log shifts to see summary</div></div>
     </div>
   </div>
@@ -325,27 +446,16 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
 
   <!-- STREAM -->
   <div id="p-stream" class="panel">
-    <!-- STREAM CURRENT AVAILABLE -->
-    <div style="background:var(--green-dim);border:1px solid rgba(29,185,84,0.25);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
-      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-family:'DM Mono',monospace;">Stream current available</div>
-      <div style="font-size:52px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green);line-height:1;" id="stream-current-amt">£0.00</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;" id="stream-current-sub">Log shifts to see what you can access</div>
-      <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(29,185,84,0.2);">
-        <div style="text-align:center;">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Total earned</div>
-          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--text);" id="sc-earned">£0.00</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Already taken</div>
-          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--amber);" id="sc-taken">£0.00</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Available now</div>
-          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--green);" id="sc-available">£0.00</div>
-        </div>
+    <div class="stream-hero">
+      <div class="sh-label">Stream current available</div>
+      <div class="sh-amount" id="stream-current-amt">£0.00</div>
+      <div class="sh-sub" id="stream-current-sub">Log shifts to see what you can access</div>
+      <div class="sh-stats">
+        <div style="text-align:center;"><div class="sh-stat-label">Total earned</div><div class="sh-stat-val" style="color:var(--text);" id="sc-earned">£0.00</div></div>
+        <div style="text-align:center;"><div class="sh-stat-label">Already taken</div><div class="sh-stat-val" style="color:var(--amber);" id="sc-taken">£0.00</div></div>
+        <div style="text-align:center;"><div class="sh-stat-label">Available now</div><div class="sh-stat-val" style="color:var(--green);" id="sc-available">£0.00</div></div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-head"><span class="card-title">Stream breakdown</span></div>
       <div class="srow"><span class="srow-lbl">Total earned this period</span><span class="srow-val" id="st-total">£0.00</span></div>
@@ -357,15 +467,15 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
       <div class="tip">Stream gives you up to 50% of earned pay early. Powerleague deducts the £1.95 fee per withdrawal from your final payday.</div>
     </div>
     <div class="card">
-      <div class="card-head"><span class="card-title">Withdrawal log</span><span id="sw-fee-total" style="font-size:11px;font-family:'DM Mono',monospace;color:var(--red);">£0.00 in fees</span></div>
-      <div id="sw-list"><div class="empty" style="padding:16px 0;">No withdrawals logged yet</div></div>
+      <div class="card-head"><span class="card-title">Withdrawal log</span><span id="sw-fee-total" style="font-size:11px;font-family:'DM Mono',monospace;color:var(--red);font-weight:600;">£0.00 in fees</span></div>
+      <div id="sw-list"><div class="empty" style="padding:12px 0;">No withdrawals logged yet</div></div>
       <div class="sw-inputs">
         <input type="number" id="sw-amt" placeholder="Amount £" min="0" style="flex:1;" />
         <input type="date" id="sw-date" style="flex:1;" />
         <button class="sw-add-btn" onclick="addWithdrawal()">Log it</button>
       </div>
-      <div class="srow" style="margin-top:12px;border-top:1px solid var(--border2);">
-        <span class="srow-lbl">Total fees at payday</span>
+      <div class="srow" style="margin-top:12px;border-top:2px solid var(--border2);">
+        <span class="srow-lbl" style="font-weight:600;">Total fees at payday</span>
         <span class="srow-val r" id="sw-total-fees">£0.00</span>
       </div>
     </div>
@@ -374,22 +484,17 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
   <!-- BUDGET -->
   <div id="p-budget" class="panel">
     <div class="budget-eyebrow">Budget Tracker</div>
-
-    <!-- INCOME BREAKDOWN -->
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-head">
-        <span class="card-title">Total income breakdown</span>
-        <button onclick="syncIncomeFromShifts()" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,84,0.3);border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;padding:4px 10px;cursor:pointer;">↻ Sync</button>
+    <div class="income-breakdown-card">
+      <div class="card-head" style="margin-bottom:12px;">
+        <span class="card-title" style="color:var(--green);">Total income breakdown</span>
+        <button onclick="syncIncomeFromShifts()" style="background:var(--green);color:#fff;border:none;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;padding:5px 12px;cursor:pointer;font-weight:600;">↻ Sync</button>
       </div>
-      <div id="income-breakdown"><div style="font-size:13px;color:var(--muted2);text-align:center;padding:10px 0;">Log shifts to see your income breakdown</div></div>
+      <div id="income-breakdown"><div style="font-size:13px;color:var(--muted);text-align:center;padding:8px 0;">Log shifts to see your income breakdown</div></div>
     </div>
-
-    <!-- MONTH COMPARE -->
     <div class="card" style="margin-bottom:14px;">
       <div class="card-head"><span class="card-title">Month comparison</span></div>
       <div id="month-compare"><div style="font-size:13px;color:var(--muted2);padding:4px 0;">Log shifts across periods to compare</div></div>
     </div>
-
     <div class="month-nav">
       <button class="mbtn" onclick="setMonth(this)">APR</button>
       <button class="mbtn active" onclick="setMonth(this)">MAY</button>
@@ -398,35 +503,31 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
       <button class="mbtn" onclick="setMonth(this)">AUG</button>
       <button class="mbtn" onclick="setMonth(this)">SEP</button>
     </div>
-
     <div class="inputs-grid">
-      <div class="input-card" style="opacity:0.85;">
-        <div class="ic-label"><span>💷</span> Income <span style="font-size:8px;background:var(--green-dim);color:var(--green);padding:1px 5px;border-radius:4px;margin-left:4px;">AUTO</span></div>
-        <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="0" placeholder="0" readonly style="cursor:default;opacity:0.8;"></div>
-        <div id="b-income-sub" style="font-size:10px;color:var(--green);font-family:'DM Mono',monospace;margin-top:5px;">synced from shifts</div>
+      <div class="input-card" style="opacity:0.9;">
+        <div class="ic-label">💷 Income <span style="font-size:8px;background:var(--green-light);color:var(--green);padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:700;">AUTO</span></div>
+        <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="0" placeholder="0" readonly style="cursor:default;"></div>
+        <div id="b-income-sub" style="font-size:10px;color:var(--green);margin-top:5px;font-weight:600;">synced from shifts</div>
       </div>
       <div class="input-card ao">
-        <div class="ic-label"><span>⛽</span> Fuel</div>
+        <div class="ic-label">⛽ Fuel</div>
         <div class="ic-input-row"><span class="ic-sym o">£</span><input class="ic-field" type="number" id="b-fuel" value="30" placeholder="0" oninput="brecalc()"></div>
       </div>
       <div class="input-card ab">
-        <div class="ic-label"><span>📊</span> Apex</div>
+        <div class="ic-label">📊 Apex</div>
         <div class="ic-input-row"><span class="ic-sym b">£</span><input class="ic-field" type="number" id="b-apex" value="0" placeholder="0" oninput="brecalc()"></div>
       </div>
       <div class="input-card ac">
-        <div class="ic-label"><span>🏦</span> Savings</div>
+        <div class="ic-label">🏦 Savings</div>
         <div class="ic-input-row"><span class="ic-sym c">£</span><input class="ic-field" type="number" id="b-savings" value="0" placeholder="0" oninput="brecalc()"></div>
       </div>
     </div>
-
     <div class="b-alert" id="b-alert"></div>
-
     <div class="remaining-hero">
       <div class="rh-label">Left after everything</div>
       <div class="rh-value" id="b-rhval">£0.00</div>
       <div class="rh-sub" id="b-rhsub">Syncing from shifts...</div>
     </div>
-
     <div class="budget-rule">
       <div class="br-title">Budget Breakdown <span class="br-pill">Isaac's Rule</span></div>
       <div class="br-bar-wrap">
@@ -445,118 +546,94 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
         <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:var(--amber)"></div>Wants</div><div class="br-pct" id="b-pctWants">0%</div><div class="br-amt" style="color:var(--amber)" id="b-amtWants">£0</div></div>
       </div>
     </div>
-
-    <!-- BILLS EDITOR -->
     <div class="b-section">
       <div class="sec-hdr" onclick="btoggle('bills',this)">
-        <div class="sec-title"><div class="br-dot" style="background:var(--red);width:10px;height:10px;border-radius:3px"></div>Fixed Bills</div>
+        <div class="sec-title"><div class="br-dot" style="background:var(--red);width:12px;height:12px;border-radius:3px"></div>Fixed Bills</div>
         <div class="sec-badge"><span id="b-totalBills">£0.00</span><span class="chev open" id="b-chev-bills">▶</span></div>
       </div>
       <div class="collapse-body" id="b-body-bills">
         <div id="b-bills-list"></div>
-        <div style="padding:10px 16px;border-top:1px solid var(--border);">
+        <div style="padding:10px 18px;border-top:1px solid var(--border);">
           <button class="add-btn" onclick="addBill()" style="margin-top:0;">+ Add bill</button>
         </div>
       </div>
     </div>
-
     <div class="b-section">
       <div class="sec-hdr" onclick="btoggle('needs',this)">
-        <div class="sec-title"><div class="br-dot" style="background:#60a5fa;width:10px;height:10px;border-radius:3px"></div>Needs</div>
+        <div class="sec-title"><div class="br-dot" style="background:#60a5fa;width:12px;height:12px;border-radius:3px"></div>Needs</div>
         <div class="sec-badge"><span id="b-totalNeeds">—</span><span class="chev open" id="b-chev-needs">▶</span></div>
       </div>
       <div class="collapse-body" id="b-body-needs">
         <div style="border-top:1px solid var(--border);">
-          <div class="bill-item"><span class="bill-emoji">⛽</span><span style="flex:1;font-size:13px;color:var(--muted);">Fuel</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:#fb923c;" id="b-fuelAmt">-£30.00</span></div>
-          <div class="bill-item"><span class="bill-emoji">🍕</span><span style="flex:1;font-size:13px;color:var(--muted);">Food / Fast Food (est.)</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--amber);">-£50.00</span></div>
-          <div class="bill-item"><span class="bill-emoji">📊</span><span style="flex:1;font-size:13px;color:var(--muted);">Apex</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:#60a5fa;" id="b-apexAmt">-£0.00</span></div>
-          <div class="bill-item"><span class="bill-emoji">💹</span><span style="flex:1;font-size:13px;color:var(--muted);">Trading 212</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--cyan);">-£20.00</span></div>
+          <div class="bill-item"><span style="font-size:18px;">⛽</span><span style="flex:1;font-size:13px;color:var(--muted);font-weight:500;">Fuel</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--amber);font-weight:600;" id="b-fuelAmt">-£30.00</span></div>
+          <div class="bill-item"><span style="font-size:18px;">🍕</span><span style="flex:1;font-size:13px;color:var(--muted);font-weight:500;">Food / Fast Food (est.)</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--amber);font-weight:600;">-£50.00</span></div>
+          <div class="bill-item"><span style="font-size:18px;">📊</span><span style="flex:1;font-size:13px;color:var(--muted);font-weight:500;">Apex</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--blue);font-weight:600;" id="b-apexAmt">-£0.00</span></div>
+          <div class="bill-item"><span style="font-size:18px;">💹</span><span style="flex:1;font-size:13px;color:var(--muted);font-weight:500;">Trading 212</span><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--cyan);font-weight:600;">-£20.00</span></div>
         </div>
       </div>
     </div>
-
-    <!-- DEBT -->
     <div class="debt-section">
       <div class="debt-hdr">Debt Payments</div>
       <div id="b-debt-list"></div>
       <button class="add-btn" onclick="addDebt()" style="margin-top:10px;">+ Add debt</button>
     </div>
-
-    <!-- TAX ESTIMATE -->
     <div class="tax-card">
-      <div class="tax-title">📊 Tax estimate (est. annual)</div>
-      <div class="tax-row"><div class="tax-key">Hourly rate</div><div class="tax-val" style="color:var(--blue)">£11.44/hr</div></div>
+      <div class="tax-title">📊 Tax estimate (annual projection)</div>
       <div class="tax-row"><div class="tax-key">Est. annual income</div><div class="tax-val" id="tax-annual">£0</div></div>
       <div class="tax-row"><div class="tax-key">Personal allowance</div><div class="tax-val" style="color:var(--green)">£12,570</div></div>
-      <div class="tax-row"><div class="tax-key">Taxable income</div><div class="tax-val" id="tax-taxable">£0</div></div>
       <div class="tax-row"><div class="tax-key">Income tax (20%)</div><div class="tax-val" style="color:var(--red)" id="tax-it">£0</div></div>
-      <div class="tax-row"><div class="tax-key">National Insurance</div><div class="tax-val" style="color:var(--amber)" id="tax-ni">£0</div></div>
-      <div class="tax-row" style="border-top:1px solid rgba(91,156,246,0.3);margin-top:4px;"><div class="tax-key" style="color:var(--text);font-weight:600;">Take-home (est.)</div><div class="tax-val" style="color:var(--blue);font-size:16px;" id="tax-takehome">£0</div></div>
-      <div class="tax-note">Based on your current hours × 52 weeks. This is an estimate only — your actual tax depends on total annual earnings. HMRC personal allowance 2025/26: £12,570.</div>
+      <div class="tax-row"><div class="tax-key">National Insurance (8%)</div><div class="tax-val" style="color:var(--amber)" id="tax-ni">£0</div></div>
+      <div class="tax-row" style="border-top:1px solid #bfdbfe;margin-top:4px;"><div class="tax-key" style="color:var(--text);font-weight:700;">Take-home (est.)</div><div class="tax-val" style="color:var(--blue);font-size:16px;" id="tax-takehome">£0</div></div>
+      <div class="tax-note">Based on current hours × 52 weeks. Estimate only — actual tax depends on total annual earnings.</div>
     </div>
-
-    <!-- MONEY BREAKDOWN -->
     <div class="zl-card">
       <div class="zl-title">Where your money goes</div>
-      <div class="zl-row"><div class="zl-key">Income (payday amount)</div><div class="zl-val" id="b-zlIncome">£0.00</div></div>
+      <div class="zl-row"><div class="zl-key">Income (stream available)</div><div class="zl-val" id="b-zlIncome">£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Fixed bills</div><div class="zl-val" style="color:var(--red)" id="b-zlBills">-£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Needs</div><div class="zl-val" style="color:var(--amber)" id="b-zlNeeds">-£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Debt payments</div><div class="zl-val" style="color:var(--purple)" id="b-zlDebt">-£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Savings</div><div class="zl-val" style="color:var(--cyan)" id="b-zlSavings">-£0.00</div></div>
       <div class="zl-highlight">
         <div><div class="zl-hl-label">Safe to spend</div><div class="zl-hl-sub">after all outgoings</div></div>
-        <div><div class="zl-hl-val" id="b-zlMax" style="color:var(--green)">£0.00</div><div class="zl-hl-sub2" id="b-zlWeekly">~£0.00 / week</div></div>
+        <div><div class="zl-hl-val" id="b-zlMax">£0.00</div><div class="zl-hl-sub2" id="b-zlWeekly">~£0.00/week</div></div>
       </div>
     </div>
-
-    <!-- PRIORITY -->
     <div class="priority-block">
       <div class="p-title">This Month's Priority Order</div>
       <div class="p-row"><div class="p-num" style="color:var(--red)">1</div><div class="p-info"><div class="p-name">Fixed Bills</div><div class="p-desc" id="b-p1desc">Your fixed monthly bills</div></div><div class="p-status" style="color:var(--red)" id="b-p1">£0</div></div>
-      <div class="p-row"><div class="p-num" style="color:#fb923c">2</div><div class="p-info"><div class="p-name">Fuel + Food + Apex</div><div class="p-desc">Essentials first</div></div><div class="p-status" style="color:#fb923c" id="b-p2">—</div></div>
+      <div class="p-row"><div class="p-num" style="color:var(--amber)">2</div><div class="p-info"><div class="p-name">Fuel + Food + Apex</div><div class="p-desc">Essentials first</div></div><div class="p-status" style="color:var(--amber)" id="b-p2">—</div></div>
       <div class="p-row"><div class="p-num" style="color:var(--purple)">3</div><div class="p-info"><div class="p-name">Debt Clearance</div><div class="p-desc" id="b-p3desc">Add debts above to track</div></div><div class="p-status" style="color:var(--purple)" id="b-p3">—</div></div>
       <div class="p-row"><div class="p-num" style="color:var(--cyan)">4</div><div class="p-info"><div class="p-name">Savings</div><div class="p-desc">Even £20 a month adds up</div></div><div class="p-status" style="color:var(--cyan)" id="b-p4">£0</div></div>
       <div class="p-row"><div class="p-num" style="color:var(--amber)">5</div><div class="p-info"><div class="p-name">Wants</div><div class="p-desc">Entertainment, shopping, eating out</div></div><div class="p-status" style="color:var(--amber)" id="b-p5">—</div></div>
     </div>
   </div>
 
-
   <!-- MORE -->
   <div id="p-more" class="panel">
-
-    <!-- STREAM NOTIFY BANNER -->
-    <div id="stream-notify-banner" style="display:none;background:var(--green-dim);border:1px solid rgba(29,185,84,0.3);border-radius:12px;padding:16px;margin-bottom:14px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--green);">⚡ Stream is worth using now</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;" id="stream-notify-text">You can access £0 early</div>
-        </div>
-        <button onclick="go('stream', document.querySelectorAll('.tab')[2])" style="background:var(--green);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;">Open Stream</button>
+    <div id="stream-notify-banner" style="display:none" class="stream-notify">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--green);">⚡ Stream is worth using now</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;" id="stream-notify-text">You can access £0 early</div>
       </div>
+      <button onclick="go('stream',document.querySelectorAll('.tab')[2])" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;">Open Stream</button>
     </div>
-
-    <!-- PAYDAY PLAN -->
     <div class="card">
       <div class="card-head">
         <span class="card-title">Payday plan</span>
-        <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;" id="pp-payday-label">—</span>
+        <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;font-weight:600;" id="pp-payday-label">—</span>
       </div>
-      <div id="payday-plan-content">
-        <div class="empty" style="padding:16px 0;">Log shifts to generate your payday plan</div>
-      </div>
+      <div id="payday-plan-content"><div class="empty" style="padding:16px 0;">Log shifts to generate your payday plan</div></div>
     </div>
-
-    <!-- SPENDING LOG -->
     <div class="card">
       <div class="card-head">
         <span class="card-title">Spending log</span>
-        <span style="font-size:11px;color:var(--red);font-family:'DM Mono',monospace;" id="spend-total-label">£0.00 spent</span>
+        <span style="font-size:11px;color:var(--red);font-family:'DM Mono',monospace;font-weight:600;" id="spend-total-label">£0.00 spent</span>
       </div>
       <div id="spend-list"><div class="empty" style="padding:10px 0;">No spending logged yet</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
-        <input type="text" id="sp-name" placeholder="What was it?" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;grid-column:span 2;" />
-        <input type="number" id="sp-amt" placeholder="£ amount" min="0" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 11px;outline:none;-webkit-appearance:none;" />
-        <select id="sp-cat" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;-webkit-appearance:none;">
+      <div class="inp-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+        <input type="text" id="sp-name" placeholder="What was it?" style="grid-column:span 2;width:100%;" />
+        <input type="number" id="sp-amt" placeholder="£ amount" min="0" style="width:100%;" />
+        <select id="sp-cat" style="width:100%;">
           <option value="food">🍕 Food</option>
           <option value="fuel">⛽ Fuel</option>
           <option value="bills">📱 Bills</option>
@@ -568,50 +645,46 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
       </div>
       <button class="add-btn" onclick="addSpend()" style="margin-top:8px;">+ Log spend</button>
     </div>
-
-    <!-- PEOPLE WHO OWE ME -->
     <div class="card">
       <div class="card-head">
         <span class="card-title">People who owe me</span>
-        <span style="font-size:11px;color:var(--green);font-family:'DM Mono',monospace;" id="owe-me-total">£0.00</span>
+        <span style="font-size:11px;color:var(--green);font-family:'DM Mono',monospace;font-weight:600;" id="owe-me-total">£0.00</span>
       </div>
       <div id="owe-me-list"><div class="empty" style="padding:10px 0;">No one owes you anything</div></div>
-      <div style="display:flex;gap:8px;margin-top:12px;">
-        <input type="text" id="ome-name" placeholder="Their name" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
-        <input type="number" id="ome-amt" placeholder="£" min="0" style="width:90px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 10px;outline:none;-webkit-appearance:none;" />
-        <input type="text" id="ome-note" placeholder="For what?" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-top:12px;">
+        <input type="text" id="ome-name" placeholder="Their name" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 11px;outline:none;" />
+        <input type="number" id="ome-amt" placeholder="£" min="0" style="width:70px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 10px;outline:none;-webkit-appearance:none;" />
+        <input type="text" id="ome-note" placeholder="For what?" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 11px;outline:none;" />
       </div>
       <button class="add-btn" onclick="addOweMe()" style="margin-top:8px;">+ Add</button>
     </div>
-
-    <!-- PEOPLE I OWE -->
     <div class="card">
       <div class="card-head">
         <span class="card-title">People I owe</span>
-        <span style="font-size:11px;color:var(--red);font-family:'DM Mono',monospace;" id="i-owe-total">£0.00</span>
+        <span style="font-size:11px;color:var(--red);font-family:'DM Mono',monospace;font-weight:600;" id="i-owe-total">£0.00</span>
       </div>
-      <div id="i-owe-list"><div class="empty" style="padding:10px 0;">You don't owe anyone</div></div>
-      <div style="display:flex;gap:8px;margin-top:12px;">
-        <input type="text" id="io-name" placeholder="Who?" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
-        <input type="number" id="io-amt" placeholder="£" min="0" style="width:90px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 10px;outline:none;-webkit-appearance:none;" />
-        <input type="text" id="io-note" placeholder="For what?" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
+      <div id="i-owe-list"><div class="empty" style="padding:10px 0;">You don&apos;t owe anyone</div></div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-top:12px;">
+        <input type="text" id="io-name" placeholder="Who?" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 11px;outline:none;" />
+        <input type="number" id="io-amt" placeholder="£" min="0" style="width:70px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 10px;outline:none;-webkit-appearance:none;" />
+        <input type="text" id="io-note" placeholder="For what?" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:9px 11px;outline:none;" />
       </div>
       <button class="add-btn" onclick="addIOwe()" style="margin-top:8px;">+ Add</button>
     </div>
-
   </div>
 
 </div>
 
 <div class="botnav">
   <button class="bnbtn on" onclick="go('shifts',this)"><span class="ico">📋</span>Shifts</button>
-  <button class="bnbtn" onclick="go('pay',this)"><span class="ico">📅</span>Pay dates</button>
+  <button class="bnbtn" onclick="go('pay',this)"><span class="ico">📅</span>Pay</button>
   <button class="bnbtn" onclick="go('stream',this)"><span class="ico">⚡</span>Stream</button>
   <button class="bnbtn" onclick="go('budget',this)"><span class="ico">💰</span>Budget</button>
   <button class="bnbtn" onclick="go('more',this)"><span class="ico">📒</span>More</button>
 </div>
 
 <script>
+
 const RATE=11.44;
 
 // ── EARLY DECLARATIONS ──
@@ -857,11 +930,11 @@ function go(tab,btn){
 
 // ── THEME ──
 function toggleTheme(){
-  document.body.classList.toggle('light');
-  document.getElementById('theme-btn').textContent=document.body.classList.contains('light')?'🌙':'☀️';
-  try{localStorage.setItem('pl_theme',document.body.classList.contains('light')?'light':'dark');}catch(e){}
+  document.body.classList.toggle('dark');
+  document.getElementById('theme-btn').textContent=document.body.classList.contains('dark')?'☀️':'🌙';
+  try{localStorage.setItem('pl_theme',document.body.classList.contains('dark')?'dark':'light');}catch(e){}
 }
-try{if(localStorage.getItem('pl_theme')==='light'){document.body.classList.add('light');document.getElementById('theme-btn').textContent='🌙';}}catch(e){}
+try{if(localStorage.getItem('pl_theme')==='dark'){document.body.classList.add('dark');document.getElementById('theme-btn').textContent='☀️';}}catch(e){}
 
 // ── BILLS ──
 let bills=[];
@@ -1318,6 +1391,71 @@ function checkStreamNotify(){
 }
 
 
+
+
+// ── ANIMATED BACKGROUND ──
+(function(){
+  const canvas = document.getElementById('bgCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, orbs, frame;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function makeOrbs(){
+    const dark = document.body.classList.contains('dark');
+    const colors = dark
+      ? ['rgba(46,204,113,','rgba(52,152,219,','rgba(155,89,182,','rgba(46,204,113,']
+      : ['rgba(5,150,105,','rgba(37,99,235,','rgba(124,58,237,','rgba(14,165,233,'];
+    orbs = Array.from({length: 5}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 120 + Math.random() * 180,
+      dx: (Math.random() - 0.5) * 0.4,
+      dy: (Math.random() - 0.5) * 0.4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      opacity: dark ? 0.06 + Math.random() * 0.06 : 0.04 + Math.random() * 0.04,
+    }));
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    orbs.forEach(o => {
+      o.x += o.dx; o.y += o.dy;
+      if(o.x < -o.r) o.x = W + o.r;
+      if(o.x > W + o.r) o.x = -o.r;
+      if(o.y < -o.r) o.y = H + o.r;
+      if(o.y > H + o.r) o.y = -o.r;
+      const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+      g.addColorStop(0, o.color + o.opacity + ')');
+      g.addColorStop(1, o.color + '0)');
+      ctx.beginPath();
+      ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    });
+    frame = requestAnimationFrame(draw);
+  }
+
+  function init(){
+    resize();
+    makeOrbs();
+    if(frame) cancelAnimationFrame(frame);
+    draw();
+  }
+
+  window.addEventListener('resize', resize);
+  // Re-init orb colors when theme changes
+  const origToggle = window.toggleTheme;
+  window.toggleTheme = function(){
+    origToggle();
+    makeOrbs();
+  };
+  init();
+})();
 
 </script>
 </body>
