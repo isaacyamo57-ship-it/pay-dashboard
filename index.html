@@ -287,6 +287,7 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
     <button class="tab" onclick="go('pay',this)">📅 Pay dates</button>
     <button class="tab" onclick="go('stream',this)">⚡ Stream</button>
     <button class="tab" onclick="go('budget',this)">💰 Budget</button>
+    <button class="tab" onclick="go('more',this)">📒 More</button>
   </div>
 
   <!-- SHIFTS -->
@@ -498,6 +499,87 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
     </div>
   </div>
 
+
+  <!-- MORE -->
+  <div id="p-more" class="panel">
+
+    <!-- STREAM NOTIFY BANNER -->
+    <div id="stream-notify-banner" style="display:none;background:var(--green-dim);border:1px solid rgba(29,185,84,0.3);border-radius:12px;padding:16px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--green);">⚡ Stream is worth using now</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;" id="stream-notify-text">You can access £0 early</div>
+        </div>
+        <button onclick="go('stream', document.querySelectorAll('.tab')[2])" style="background:var(--green);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;">Open Stream</button>
+      </div>
+    </div>
+
+    <!-- PAYDAY PLAN -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Payday plan</span>
+        <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;" id="pp-payday-label">—</span>
+      </div>
+      <div id="payday-plan-content">
+        <div class="empty" style="padding:16px 0;">Log shifts to generate your payday plan</div>
+      </div>
+    </div>
+
+    <!-- SPENDING LOG -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Spending log</span>
+        <span style="font-size:11px;color:var(--red);font-family:'DM Mono',monospace;" id="spend-total-label">£0.00 spent</span>
+      </div>
+      <div id="spend-list"><div class="empty" style="padding:10px 0;">No spending logged yet</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+        <input type="text" id="sp-name" placeholder="What was it?" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;grid-column:span 2;" />
+        <input type="number" id="sp-amt" placeholder="£ amount" min="0" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 11px;outline:none;-webkit-appearance:none;" />
+        <select id="sp-cat" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;-webkit-appearance:none;">
+          <option value="food">🍕 Food</option>
+          <option value="fuel">⛽ Fuel</option>
+          <option value="bills">📱 Bills</option>
+          <option value="debt">💳 Debt</option>
+          <option value="savings">🏦 Savings</option>
+          <option value="wants">🛍️ Wants</option>
+          <option value="other">📦 Other</option>
+        </select>
+      </div>
+      <button class="add-btn" onclick="addSpend()" style="margin-top:8px;">+ Log spend</button>
+    </div>
+
+    <!-- PEOPLE WHO OWE ME -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">People who owe me</span>
+        <span style="font-size:11px;color:var(--green);font-family:'DM Mono',monospace;" id="owe-me-total">£0.00</span>
+      </div>
+      <div id="owe-me-list"><div class="empty" style="padding:10px 0;">No one owes you anything</div></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <input type="text" id="ome-name" placeholder="Their name" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
+        <input type="number" id="ome-amt" placeholder="£" min="0" style="width:90px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 10px;outline:none;-webkit-appearance:none;" />
+        <input type="text" id="ome-note" placeholder="For what?" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
+      </div>
+      <button class="add-btn" onclick="addOweMe()" style="margin-top:8px;">+ Add</button>
+    </div>
+
+    <!-- PEOPLE I OWE -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">People I owe</span>
+        <span style="font-size:11px;color:var(--red);font-family:'DM Mono',monospace;" id="i-owe-total">£0.00</span>
+      </div>
+      <div id="i-owe-list"><div class="empty" style="padding:10px 0;">You don't owe anyone</div></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <input type="text" id="io-name" placeholder="Who?" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
+        <input type="number" id="io-amt" placeholder="£" min="0" style="width:90px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;padding:9px 10px;outline:none;-webkit-appearance:none;" />
+        <input type="text" id="io-note" placeholder="For what?" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;padding:9px 11px;outline:none;" />
+      </div>
+      <button class="add-btn" onclick="addIOwe()" style="margin-top:8px;">+ Add</button>
+    </div>
+
+  </div>
+
 </div>
 
 <div class="botnav">
@@ -505,10 +587,20 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
   <button class="bnbtn" onclick="go('pay',this)"><span class="ico">📅</span>Pay dates</button>
   <button class="bnbtn" onclick="go('stream',this)"><span class="ico">⚡</span>Stream</button>
   <button class="bnbtn" onclick="go('budget',this)"><span class="ico">💰</span>Budget</button>
+  <button class="bnbtn" onclick="go('more',this)"><span class="ico">📒</span>More</button>
 </div>
 
 <script>
 const RATE=11.44;
+
+// ── EARLY DECLARATIONS ──
+let spending=[];try{spending=JSON.parse(localStorage.getItem('pl_spending')||'[]');}catch(e){}
+function saveSpending(){try{localStorage.setItem('pl_spending',JSON.stringify(spending));}catch(e){}}
+let oweMe=[];try{oweMe=JSON.parse(localStorage.getItem('pl_oweme')||'[]');}catch(e){}
+function saveOweMe(){try{localStorage.setItem('pl_oweme',JSON.stringify(oweMe));}catch(e){}}
+let iOwe=[];try{iOwe=JSON.parse(localStorage.getItem('pl_iowe')||'[]');}catch(e){}
+function saveIOwe(){try{localStorage.setItem('pl_iowe',JSON.stringify(iOwe));}catch(e){}}
+
 const PAY_SCHEDULE=[
   {period:10,month:'January',  from:'2025-12-07',to:'2026-01-03',cutoff:'2026-01-05',payday:'2026-01-30'},
   {period:11,month:'February', from:'2026-01-04',to:'2026-01-31',cutoff:'2026-02-02',payday:'2026-02-27'},
@@ -638,7 +730,7 @@ function render(){
   });
   document.getElementById('s-count').textContent=shifts.length+' shift'+(shifts.length!==1?'s':'');
   updateMetrics(tot,tot*RATE);
-  checkPeriodReset();checkCutoffWarning();renderPeriodSummary();syncIncomeFromShifts();
+  checkPeriodReset();checkCutoffWarning();renderPeriodSummary();syncIncomeFromShifts();if(typeof spending!=="undefined"){checkStreamNotify();renderPaydayPlan();}
 }
 
 // ── PERIOD SUMMARY ──
@@ -722,10 +814,11 @@ function go(tab,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab,.bnbtn').forEach(b=>b.classList.remove('on'));
   document.getElementById('p-'+tab).classList.add('on');
-  const idx=['shifts','pay','stream','budget'].indexOf(tab);
+  const idx=['shifts','pay','stream','budget','more'].indexOf(tab);
   document.querySelectorAll('.tab')[idx].classList.add('on');
   document.querySelectorAll('.bnbtn')[idx].classList.add('on');
   if(tab==='budget')syncIncomeFromShifts();
+  if(tab==='more'){renderPaydayPlan();renderSpending();checkStreamNotify();}
 }
 
 // ── THEME ──
@@ -966,6 +1059,212 @@ function setMonth(btn){document.querySelectorAll('.mbtn').forEach(b=>b.classList
 document.getElementById('sw-date').value=new Date().toISOString().split('T')[0];
 renderPaySchedule();updatePaydayMetric();checkCutoffWarning();
 render();renderBills();renderDebts();renderWithdrawals();syncIncomeFromShifts();
+renderSpending();renderOweMe();renderIOwe();renderPaydayPlan();checkStreamNotify();
+
+// ── SPENDING LOG ──
+const CAT_ICONS={'food':'🍕','fuel':'⛽','bills':'📱','debt':'💳','savings':'🏦','wants':'🛍️','other':'📦'};
+const CAT_COLORS={'food':'var(--amber)','fuel':'#fb923c','bills':'var(--red)','debt':'var(--purple)','savings':'var(--green)','wants':'#60a5fa','other':'var(--muted)'};
+
+function addSpend(){
+  const name=document.getElementById('sp-name').value.trim();
+  const amt=parseFloat(document.getElementById('sp-amt').value)||0;
+  const cat=document.getElementById('sp-cat').value;
+  if(!name||!amt)return;
+  spending.push({id:Date.now(),name,amt,cat,date:new Date().toISOString().split('T')[0]});
+  saveSpending();
+  document.getElementById('sp-name').value='';
+  document.getElementById('sp-amt').value='';
+  renderSpending();renderPaydayPlan();
+}
+function delSpend(id){spending=spending.filter(s=>s.id!==id);saveSpending();renderSpending();renderPaydayPlan();}
+
+function renderSpending(){
+  const el=document.getElementById('spend-list');el.innerHTML='';
+  if(!spending.length){el.innerHTML='<div class="empty" style="padding:10px 0;">No spending logged yet</div>';}
+  else{
+    const total=spending.reduce((s,x)=>s+x.amt,0);
+    // Group by category
+    const cats={};spending.forEach(s=>{if(!cats[s.cat])cats[s.cat]=0;cats[s.cat]+=s.amt;});
+    // Category summary bar
+    let barHtml='<div style="display:flex;height:6px;border-radius:20px;overflow:hidden;gap:1px;margin-bottom:12px;">';
+    Object.entries(cats).forEach(([c,a])=>{barHtml+=`<div style="background:${CAT_COLORS[c]};width:${(a/total*100).toFixed(1)}%;border-radius:3px;"></div>`;});
+    barHtml+='</div>';
+    el.innerHTML=barHtml;
+    spending.slice().reverse().forEach(s=>{
+      const d=document.createElement('div');
+      d.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--border);font-size:13px;';
+      d.innerHTML=`<div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">${CAT_ICONS[s.cat]||'📦'}</span>
+        <div><div style="font-weight:500;">${s.name}</div><div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">${new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-family:'DM Mono',monospace;font-weight:500;color:${CAT_COLORS[s.cat]};">−£${s.amt.toFixed(2)}</span>
+        <button class="del" onclick="delSpend(${s.id})" style="font-size:13px;">✕</button>
+      </div>`;
+      el.appendChild(d);
+    });
+    document.getElementById('spend-total-label').textContent='£'+total.toFixed(2)+' spent';
+  }
+}
+
+// ── PEOPLE WHO OWE ME ──
+
+function addOweMe(){
+  const name=document.getElementById('ome-name').value.trim();
+  const amt=parseFloat(document.getElementById('ome-amt').value)||0;
+  const note=document.getElementById('ome-note').value.trim();
+  if(!name||!amt)return;
+  oweMe.push({id:Date.now(),name,amt,note,paid:false});
+  saveOweMe();
+  document.getElementById('ome-name').value='';
+  document.getElementById('ome-amt').value='';
+  document.getElementById('ome-note').value='';
+  renderOweMe();
+}
+function markOweMePaid(id){const x=oweMe.find(o=>o.id===id);if(x){x.paid=!x.paid;saveOweMe();renderOweMe();}}
+function delOweMe(id){oweMe=oweMe.filter(o=>o.id!==id);saveOweMe();renderOweMe();}
+
+function renderOweMe(){
+  const el=document.getElementById('owe-me-list');el.innerHTML='';
+  const active=oweMe.filter(o=>!o.paid);
+  const paid=oweMe.filter(o=>o.paid);
+  const total=active.reduce((s,o)=>s+o.amt,0);
+  document.getElementById('owe-me-total').textContent='£'+total.toFixed(2)+' owed to you';
+  if(!oweMe.length){el.innerHTML='<div class="empty" style="padding:10px 0;">No one owes you anything</div>';return;}
+  [...active,...paid].forEach(o=>{
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border);';
+    d.innerHTML=`<div>
+      <div style="font-size:13px;font-weight:600;color:${o.paid?'var(--muted)':'var(--text)'};${o.paid?'text-decoration:line-through;':''}">${o.name}</div>
+      ${o.note?`<div style="font-size:11px;color:var(--muted);">${o.note}</div>`:''}
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-family:'DM Mono',monospace;font-weight:500;color:${o.paid?'var(--muted)':'var(--green)'};">£${o.amt.toFixed(2)}</span>
+      <button onclick="markOweMePaid(${o.id})" style="background:${o.paid?'var(--bg3)':'var(--green-dim)'};color:${o.paid?'var(--muted)':'var(--green)'};border:1px solid ${o.paid?'var(--border2)':'rgba(29,185,84,0.3)'};border-radius:6px;font-size:11px;padding:4px 8px;cursor:pointer;font-family:'DM Mono',monospace;">${o.paid?'Undo':'✓ Paid'}</button>
+      <button class="del" onclick="delOweMe(${o.id})" style="font-size:13px;">✕</button>
+    </div>`;
+    el.appendChild(d);
+  });
+}
+
+// ── PEOPLE I OWE ──
+
+function addIOwe(){
+  const name=document.getElementById('io-name').value.trim();
+  const amt=parseFloat(document.getElementById('io-amt').value)||0;
+  const note=document.getElementById('io-note').value.trim();
+  if(!name||!amt)return;
+  iOwe.push({id:Date.now(),name,amt,note,paid:false});
+  saveIOwe();
+  document.getElementById('io-name').value='';
+  document.getElementById('io-amt').value='';
+  document.getElementById('io-note').value='';
+  renderIOwe();
+}
+function markIOwe(id){const x=iOwe.find(o=>o.id===id);if(x){x.paid=!x.paid;saveIOwe();renderIOwe();}}
+function delIOwe(id){iOwe=iOwe.filter(o=>o.id!==id);saveIOwe();renderIOwe();}
+
+function renderIOwe(){
+  const el=document.getElementById('i-owe-list');el.innerHTML='';
+  const active=iOwe.filter(o=>!o.paid);
+  const total=active.reduce((s,o)=>s+o.amt,0);
+  document.getElementById('i-owe-total').textContent='£'+total.toFixed(2)+' you owe';
+  if(!iOwe.length){el.innerHTML='<div class="empty" style="padding:10px 0;">You don\'t owe anyone</div>';return;}
+  const paid=iOwe.filter(o=>o.paid);
+  [...active,...paid].forEach(o=>{
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border);';
+    d.innerHTML=`<div>
+      <div style="font-size:13px;font-weight:600;color:${o.paid?'var(--muted)':'var(--text)'};${o.paid?'text-decoration:line-through;':''}">${o.name}</div>
+      ${o.note?`<div style="font-size:11px;color:var(--muted);">${o.note}</div>`:''}
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-family:'DM Mono',monospace;font-weight:500;color:${o.paid?'var(--muted)':'var(--red)'};">£${o.amt.toFixed(2)}</span>
+      <button onclick="markIOwe(${o.id})" style="background:${o.paid?'var(--bg3)':'var(--red-dim, rgba(231,76,60,0.1))'};color:${o.paid?'var(--muted)':'var(--red)'};border:1px solid ${o.paid?'var(--border2)':'rgba(231,76,60,0.3)'};border-radius:6px;font-size:11px;padding:4px 8px;cursor:pointer;font-family:'DM Mono',monospace;">${o.paid?'Undo':'✓ Paid'}</button>
+      <button class="del" onclick="delIOwe(${o.id})" style="font-size:13px;">✕</button>
+    </div>`;
+    el.appendChild(d);
+  });
+}
+
+// ── PAYDAY PLAN ──
+function renderPaydayPlan(){
+  const el=document.getElementById('payday-plan-content');
+  const lbl=document.getElementById('pp-payday-label');
+  if(!el)return;
+
+  let totalHrs=0;shifts.forEach(s=>{totalHrs+=hrs(s.s,s.e);});
+  const earned=totalHrs*RATE;
+  const withdrawn=withdrawals.reduce((s,w)=>s+w.amt,0);
+  const totalFees=withdrawals.length*1.95;
+  const landing=Math.max(0,earned-withdrawn-totalFees);
+  const fixedTotal=bills.reduce((s,b)=>s+(b.amt||0),0);
+  const debtTotal=debts.reduce((s,d)=>s+((d.payments||[]).reduce((t,p)=>t+p.amt,0)),0);
+  const fuel=parseFloat(document.getElementById('b-fuel').value)||0;
+  const apex=parseFloat(document.getElementById('b-apex').value)||0;
+  const sav=parseFloat(document.getElementById('b-savings').value)||0;
+  const spentTotal=spending.reduce((s,x)=>s+x.amt,0);
+  const iOweTotal=iOwe.filter(o=>!o.paid).reduce((s,o)=>s+o.amt,0);
+  const target=getNextPayday();
+  if(lbl&&target)lbl.textContent='payday '+fmtD(target.payday);
+
+  if(earned===0){el.innerHTML='<div class="empty" style="padding:16px 0;">Log shifts to generate your payday plan</div>';return;}
+
+  const steps=[
+    {label:'Landing on payday',amt:landing,color:'var(--green)',icon:'💷',isTotal:true},
+    {label:'Fixed bills',amt:-fixedTotal,color:'var(--red)',icon:'📱',note:bills.map(b=>b.name).join(', ')||'none'},
+    {label:'Fuel + food + needs',amt:-(fuel+50+apex+20),color:'#fb923c',icon:'⛽'},
+    {label:'Debt payments this period',amt:-debtTotal,color:'var(--purple)',icon:'💳'},
+    {label:'People you owe',amt:-iOweTotal,color:'var(--red)',icon:'🤝',note:iOwe.filter(o=>!o.paid).map(o=>o.name).join(', ')||'none'},
+    {label:'Savings',amt:-sav,color:'var(--cyan)',icon:'🏦'},
+  ];
+  const afterPlan=landing+steps.slice(1).reduce((s,x)=>s+x.amt,0);
+  steps.push({label:'Left for you (wants)',amt:afterPlan,color:afterPlan>=0?'var(--amber)':'var(--red)',icon:'🛍️',isTotal:true});
+
+  let running=landing;
+  let html='';
+  steps.forEach((s,i)=>{
+    if(i===0){
+      html+=`<div style="background:var(--green-dim);border:1px solid rgba(29,185,84,0.2);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">${s.icon}</span><span style="font-size:14px;font-weight:600;color:var(--text);">${s.label}</span></div>
+        <span style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--green);">£${s.amt.toFixed(2)}</span>
+      </div>`;
+    } else if(s.isTotal){
+      html+=`<div style="background:${afterPlan>=0?'rgba(245,166,35,0.08)':'rgba(231,76,60,0.08)'};border:1px solid ${afterPlan>=0?'rgba(245,166,35,0.25)':'rgba(231,76,60,0.25)'};border-radius:10px;padding:14px 16px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">${s.icon}</span><span style="font-size:14px;font-weight:600;color:var(--text);">${s.label}</span></div>
+        <span style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:${s.color};">${s.amt>=0?'£'+s.amt.toFixed(2):'−£'+Math.abs(s.amt).toFixed(2)}</span>
+      </div>`;
+    } else if(s.amt!==0){
+      html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:16px;">${s.icon}</span>
+          <div><div style="font-size:13px;color:var(--text);">${s.label}</div>${s.note?`<div style="font-size:11px;color:var(--muted);">${s.note}</div>`:''}</div>
+        </div>
+        <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:${s.color};">${s.amt<0?'−':''}£${Math.abs(s.amt).toFixed(2)}</span>
+      </div>`;
+    }
+  });
+  el.innerHTML=html;
+}
+
+// ── STREAM NOTIFY ──
+function checkStreamNotify(){
+  let totalHrs=0;shifts.forEach(s=>{totalHrs+=hrs(s.s,s.e);});
+  const earned=totalHrs*RATE;
+  const streamAmt=earned*0.5;
+  const banner=document.getElementById('stream-notify-banner');
+  const txt=document.getElementById('stream-notify-text');
+  if(!banner)return;
+  if(streamAmt>=50){
+    banner.style.display='block';
+    if(txt)txt.textContent='You can access £'+streamAmt.toFixed(2)+' early via Stream right now';
+  } else {
+    banner.style.display='none';
+  }
+}
+
+
+
 </script>
 </body>
 </html>
