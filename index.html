@@ -629,7 +629,32 @@ function saveDebts(){try{localStorage.setItem('pl_debts',JSON.stringify(debts));
 function addDebt(){debts.push({id:Date.now(),name:'',owed:0,paying:0});saveDebts();renderDebts();}
 function removeDebt(id){debts=debts.filter(d=>d.id!==id);saveDebts();renderDebts();brecalc();}
 function resetDebt(id){const d=debts.find(d=>d.id===id);if(d){d.paying=0;saveDebts();renderDebts();brecalc();}}
-function updDebt(id,f,v){const d=debts.find(d=>d.id===id);if(d){d[f]=f==='name'?v:parseFloat(v)||0;saveDebts();brecalc();}}
+function updDebt(id,f,v){
+  const d=debts.find(d=>d.id===id);
+  if(!d)return;
+  d[f]=f==='name'?v:parseFloat(v)||0;
+  saveDebts();
+  // update bar and status in place without re-rendering
+  const owed=d.owed||0, paying=d.paying||0;
+  const rem=Math.max(0,owed-paying);
+  const isCleared=owed>0&&paying>=owed;
+  const paidPct=owed>0?Math.min(100,(paying/owed)*100):0;
+  let statusText,statusClass;
+  if(!owed){statusText='Enter amount owed above';statusClass='';}
+  else if(isCleared){statusText='✓ Cleared! Great work';statusClass='cleared';}
+  else if(!paying){statusText='£'+owed.toFixed(2)+' remaining — enter payment amount';statusClass='';}
+  else{statusText='£'+rem.toFixed(2)+' remaining (paid £'+paying.toFixed(2)+')';statusClass='';}
+  const item=document.getElementById('debt-item-'+id);
+  if(item){
+    const bar=item.querySelector('.debt-bar-fill');
+    const status=item.querySelector('.debt-status');
+    const pct=item.querySelector('.debt-pct');
+    if(bar)bar.style.width=paidPct+'%';
+    if(status){status.textContent=statusText;status.className='debt-status'+(statusClass?' '+statusClass:'');}
+    if(pct)pct.textContent=owed>0?Math.round(paidPct)+'% paid':'';
+  }
+  brecalc();
+}
 
 function renderDebts(){
   const el=document.getElementById('b-debt-list');el.innerHTML='';
@@ -644,7 +669,7 @@ function renderDebts(){
     if(!owed){statusText='Enter amount owed';statusClass='';}
     else if(isCleared){statusText='✓ Cleared!';statusClass='cleared';}
     else{statusText='£'+rem.toFixed(2)+' remaining';statusClass='';}
-    const div=document.createElement('div');div.className='debt-item';
+    const div=document.createElement('div');div.className='debt-item';div.id='debt-item-'+d.id;
     div.innerHTML=`<div class="debt-top"><input style="background:none;border:none;border-bottom:1px solid var(--border2);color:${color};font-size:14px;font-weight:600;font-family:'Sora',sans-serif;outline:none;width:110px;padding:2px 0;" placeholder="Name..." value="${d.name}" oninput="updDebt(${d.id},'name',this.value)" /><div class="debt-right"><div class="debt-owed">Owed: £<input type="number" style="background:none;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;width:60px;outline:none;padding:2px 0;" value="${d.owed||''}" placeholder="0" min="0" oninput="updDebt(${d.id},'owed',this.value)" /></div><input class="debt-input" type="number" placeholder="£ paying" min="0" value="${d.paying||''}" oninput="updDebt(${d.id},'paying',this.value)" /><button class="del" onclick="removeDebt(${d.id})" style="font-size:15px;">✕</button></div></div><div class="debt-bar-track"><div class="debt-bar-fill" style="width:${pct}%;background:${color};"></div></div><div class="debt-status ${rem===0?'cleared':''}">${rem===0?'✓ Cleared!':'£'+rem.toFixed(2)+' remaining'}</div>`;
     el.appendChild(div);
   });
