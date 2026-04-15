@@ -628,6 +628,7 @@ function saveDebts(){try{localStorage.setItem('pl_debts',JSON.stringify(debts));
 
 function addDebt(){debts.push({id:Date.now(),name:'',owed:0,paying:0});saveDebts();renderDebts();}
 function removeDebt(id){debts=debts.filter(d=>d.id!==id);saveDebts();renderDebts();brecalc();}
+function resetDebt(id){const d=debts.find(d=>d.id===id);if(d){d.paying=0;saveDebts();renderDebts();brecalc();}}
 function updDebt(id,f,v){const d=debts.find(d=>d.id===id);if(d){d[f]=f==='name'?v:parseFloat(v)||0;saveDebts();brecalc();}}
 
 function renderDebts(){
