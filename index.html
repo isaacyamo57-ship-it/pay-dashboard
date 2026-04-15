@@ -320,8 +320,9 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 
     <div class="inputs-grid">
       <div class="input-card">
-        <div class="ic-label"><span>💷</span> Income</div>
-        <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="346" placeholder="0" oninput="brecalc()"></div>
+        <div class="ic-label" style="justify-content:space-between;"><span style="display:flex;align-items:center;gap:5px;"><span>💷</span> Income</span><button onclick="syncIncomeFromShifts()" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(29,185,84,0.3);border-radius:6px;font-size:9px;font-family:'DM Mono',monospace;padding:2px 7px;cursor:pointer;letter-spacing:0.05em;">↻ SYNC</button></div>
+        <div class="ic-input-row"><span class="ic-sym">£</span><input class="ic-field" type="number" id="b-income" value="0" placeholder="0" oninput="brecalc()"></div>
+        <div id="b-income-sub" style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:5px;">tap ↻ to pull from shifts</div>
       </div>
       <div class="input-card ao">
         <div class="ic-label"><span>⛽</span> Fuel</div>
@@ -600,6 +601,7 @@ function go(tab,btn){
   const idx=['shifts','pay','stream','budget'].indexOf(tab);
   document.querySelectorAll('.tab')[idx].classList.add('on');
   document.querySelectorAll('.bnbtn')[idx].classList.add('on');
+  if(tab==='budget') syncIncomeFromShifts();
 }
 
 // ── FIXED BILLS ──
@@ -758,6 +760,32 @@ function updDebt(id,f,v){
 }
 
 
+
+function syncIncomeFromShifts(){
+  // Calculate total earned from logged shifts
+  let totalHrs = 0;
+  shifts.forEach(s => {
+    const h = hrs(s.s, s.e);
+    totalHrs += h;
+  });
+  const earned = totalHrs * RATE;
+  const input = document.getElementById('b-income');
+  if(input){
+    input.value = earned.toFixed(2);
+    // Update sub label
+    const sub = document.getElementById('b-income-sub');
+    if(sub){
+      if(earned > 0){
+        sub.textContent = totalHrs.toFixed(1)+'hrs · '+shifts.length+' shift'+(shifts.length!==1?'s':'')+' logged';
+        sub.style.color = 'var(--green)';
+      } else {
+        sub.textContent = 'no shifts logged yet';
+        sub.style.color = 'var(--muted)';
+      }
+    }
+    brecalc();
+  }
+}
 
 function bfmt(n){return(n<0?'-':'')+'£'+Math.abs(n).toFixed(2);}
 function bpct(n,t){return t?Math.min(100,Math.max(0,n/t*100)):0;}
