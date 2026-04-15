@@ -556,7 +556,8 @@ function render(){
     const h=hrs(x.s,x.e);tot+=h;
     const earn=h>0?'£'+(h*RATE).toFixed(2):'—',dur=h>0?fmt(h):'—';
     const d=document.createElement('div');d.className='shift-card';
-    d.innerHTML=`<div class="shift-top"><span class="shift-earn">${earn}</span><span class="shift-dur">${dur}</span><button class="del" onclick="delShift(${x.id})">✕</button></div>
+    const half = h>0?'£'+((h*RATE)*0.5).toFixed(2):'';
+    d.innerHTML=`<div class="shift-top"><div><span class="shift-earn">${earn}</span>${half?`<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);margin-left:8px;">⚡ ${half}</span>`:''}</div><span class="shift-dur">${dur}</span><button class="del" onclick="delShift(${x.id})">✕</button></div>
     <div class="shift-fields">
       <div class="sfield"><label>Date</label><input type="date" value="${x.d}" oninput="upd(${x.id},'d',this.value)"></div>
       <div class="sfield"><label>Start</label><input type="time" value="${x.s}" oninput="upd(${x.id},'s',this.value)"></div>
