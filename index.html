@@ -626,9 +626,10 @@ let debts=[];
 try{debts=JSON.parse(localStorage.getItem('pl_debts')||'[]');}catch(e){}
 function saveDebts(){try{localStorage.setItem('pl_debts',JSON.stringify(debts));}catch(e){}}
 
-function addDebt(){debts.push({id:Date.now(),name:'',owed:0,paying:0});saveDebts();renderDebts();}
+function addDebt(){debts.push({id:Date.now(),name:'',owed:0,payments:[]});saveDebts();renderDebts();}
 function removeDebt(id){debts=debts.filter(d=>d.id!==id);saveDebts();renderDebts();brecalc();}
-function resetDebt(id){if(!confirm('Reset all payments for this debt?'))return;const d=debts.find(d=>d.id===id);if(d){d.payments=[];saveDebts();renderDebts();brecalc();}}
+function resetDebt(id){if(!confirm('Reset all payments for this debt?'))return;const d=debts.find(d=>d.id===id);if(d){d.payments=[];saveDebts();updateDebtUI(id);brecalc();}}
+
 function addPayment(id){
   const input=document.getElementById('dpay-'+id);
   const amt=parseFloat(input.value)||0;
@@ -640,9 +641,11 @@ function addPayment(id){
   d.payments.push({amt,date:today});
   saveDebts();
   input.value='';
+  input.focus();
   updateDebtUI(id);
   brecalc();
 }
+
 function removePayment(id,pi){
   const d=debts.find(d=>d.id===id);
   if(!d||!d.payments)return;
@@ -651,6 +654,7 @@ function removePayment(id,pi){
   updateDebtUI(id);
   brecalc();
 }
+
 function updateDebtUI(id){
   const d=debts.find(d=>d.id===id);
   if(!d)return;
@@ -664,33 +668,85 @@ function updateDebtUI(id){
   const paidPct=owed>0?Math.min(100,(totalPaid/owed)*100):0;
   let statusText,statusClass;
   if(!owed){statusText='Enter amount owed above';statusClass='';}
-  else if(isCleared){statusText='✓ Cleared! Great work';statusClass='cleared';}
-  else if(!totalPaid){statusText='£'+owed.toFixed(2)+' remaining';statusClass='';}
-  else{statusText='£'+rem.toFixed(2)+' remaining · paid £'+totalPaid.toFixed(2);statusClass='';}
+  else if(isCleared){statusText='\u2713 Cleared! Great work';statusClass='cleared';}
+  else if(!totalPaid){statusText='\u00a3'+owed.toFixed(2)+' remaining';statusClass='';}
+  else{statusText='\u00a3'+rem.toFixed(2)+' remaining \u00b7 paid \u00a3'+totalPaid.toFixed(2);statusClass='';}
   const item=document.getElementById('debt-item-'+id);
   if(!item)return;
-  // update bar
   const bar=item.querySelector('.debt-bar-fill');
   if(bar)bar.style.width=paidPct+'%';
-  // update status
   const status=item.querySelector('.debt-status');
   if(status){status.textContent=statusText;status.className='debt-status'+(statusClass?' '+statusClass:'');}
-  // update pct label
   const pctEl=item.querySelector('.dpct-label');
   if(pctEl)pctEl.textContent=owed>0?Math.round(paidPct)+'% paid':'';
-  // update payments list
   const payList=item.querySelector('.pay-history');
   if(payList){
-    payList.innerHTML=payments.map((p,pi)=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid var(--border);">
-        <span style="font-family:'DM Mono',monospace;font-size:12px;color:${color};">+£${p.amt.toFixed(2)}</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);">${p.date}</span>
-          <button onclick="removePayment(${id},${pi})" style="background:none;border:none;color:var(--muted2);font-size:13px;cursor:pointer;">✕</button>
-        </div>
-      </div>`).join('');
+    payList.innerHTML=payments.map((p,pi)=>
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid var(--border);">'+
+      '<span style="font-family:\'DM Mono\',monospace;font-size:12px;color:'+color+';">+\u00a3'+p.amt.toFixed(2)+'</span>'+
+      '<div style="display:flex;align-items:center;gap:8px;">'+
+      '<span style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);">'+p.date+'</span>'+
+      '<button onclick="removePayment('+id+','+pi+')" style="background:none;border:none;color:var(--muted2);font-size:13px;cursor:pointer;">\u2715</button>'+
+      '</div></div>'
+    ).join('');
   }
 }
+
+function renderDebts(){
+  const el=document.getElementById('b-debt-list');
+  el.innerHTML='';
+  if(!debts.length){
+    el.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:10px 0;">No debts added yet</div>';
+    brecalc();return;
+  }
+  debts.forEach((d,i)=>{
+    if(!d.payments)d.payments=[];
+    const color=DEBT_COLORS[i%DEBT_COLORS.length];
+    const owed=d.owed||0;
+    const payments=d.payments;
+    const totalPaid=payments.reduce((s,p)=>s+p.amt,0);
+    const rem=Math.max(0,owed-totalPaid);
+    const isCleared=owed>0&&totalPaid>=owed;
+    const paidPct=owed>0?Math.min(100,(totalPaid/owed)*100):0;
+    let statusText,statusClass;
+    if(!owed){statusText='Enter amount owed above';statusClass='';}
+    else if(isCleared){statusText='\u2713 Cleared! Great work';statusClass='cleared';}
+    else if(!totalPaid){statusText='\u00a3'+owed.toFixed(2)+' remaining';statusClass='';}
+    else{statusText='\u00a3'+rem.toFixed(2)+' remaining \u00b7 paid \u00a3'+totalPaid.toFixed(2);statusClass='';}
+    const paymentsHTML=payments.map((p,pi)=>
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid var(--border);">'+
+      '<span style="font-family:\'DM Mono\',monospace;font-size:12px;color:'+color+';">+\u00a3'+p.amt.toFixed(2)+'</span>'+
+      '<div style="display:flex;align-items:center;gap:8px;">'+
+      '<span style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);">'+p.date+'</span>'+
+      '<button onclick="removePayment('+d.id+','+pi+')" style="background:none;border:none;color:var(--muted2);font-size:13px;cursor:pointer;">\u2715</button>'+
+      '</div></div>'
+    ).join('');
+    const div=document.createElement('div');
+    div.className='debt-item';
+    div.id='debt-item-'+d.id;
+    div.innerHTML=
+      '<div class="debt-top">'+
+      '<input style="background:none;border:none;border-bottom:1px solid var(--border2);color:'+color+';font-size:14px;font-weight:600;font-family:\'Sora\',sans-serif;outline:none;width:110px;padding:2px 0;" placeholder="Name..." value="'+d.name+'" oninput="updDebt('+d.id+',\'name\',this.value)" />'+
+      '<div class="debt-right">'+
+      '<div class="debt-owed">Owed: \u00a3<input type="number" style="background:none;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:\'DM Mono\',monospace;font-size:13px;width:65px;outline:none;padding:2px 0;" value="'+(owed||'')+'" placeholder="0" min="0" oninput="updDebt('+d.id+',\'owed\',this.value)" /></div>'+
+      '<button onclick="resetDebt('+d.id+')" style="background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);font-size:11px;padding:4px 7px;cursor:pointer;font-family:\'DM Mono\',monospace;">\u21ba reset</button>'+
+      '<button class="del" onclick="removeDebt('+d.id+')" style="font-size:15px;">\u2715</button>'+
+      '</div></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0;">'+
+      '<div class="debt-status'+( statusClass?' '+statusClass:'')+'">'+ statusText+'</div>'+
+      (owed>0?'<div class="dpct-label" style="font-family:\'DM Mono\',monospace;font-size:11px;color:'+color+';">'+Math.round(paidPct)+'% paid</div>':'')+
+      '</div>'+
+      '<div class="debt-bar-track"><div class="debt-bar-fill" style="width:'+paidPct+'%;background:'+color+';"></div></div>'+
+      (payments.length?'<div class="pay-history" style="margin-top:8px;padding:0 2px;">'+paymentsHTML+'</div>':'<div class="pay-history" style="margin-top:8px;padding:0 2px;"></div>')+
+      '<div style="display:flex;gap:8px;margin-top:10px;align-items:center;">'+
+      '<input id="dpay-'+d.id+'" type="number" placeholder="Enter payment \u00a3" min="0" style="flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:\'DM Mono\',monospace;font-size:13px;padding:8px 10px;outline:none;-webkit-appearance:none;appearance:none;" onkeydown="if(event.key===\'Enter\')addPayment('+d.id+')" />'+
+      '<button onclick="addPayment('+d.id+')" style="background:'+color+';color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-family:\'Sora\',sans-serif;cursor:pointer;font-weight:600;white-space:nowrap;">+ Add</button>'+
+      '</div>';
+    el.appendChild(div);
+  });
+  brecalc();
+}
+
 function updDebt(id,f,v){
   const d=debts.find(d=>d.id===id);
   if(!d)return;
@@ -699,25 +755,7 @@ function updDebt(id,f,v){
   brecalc();
 }
 
-function renderDebts(){
-  const el=document.getElementById('b-debt-list');el.innerHTML='';
-  if(!debts.length){el.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:10px 0;">No debts added yet</div>';brecalc();return;}
-  debts.forEach((d,i)=>{
-    const color=DEBT_COLORS[i%DEBT_COLORS.length];
-    const owed=d.owed||0, paying=d.paying||0;
-    const rem=Math.max(0,owed-paying);
-    const isCleared=owed>0&&paying>=owed;
-    const pct=owed>0?(rem/owed)*100:100;
-    let statusText,statusClass;
-    if(!owed){statusText='Enter amount owed';statusClass='';}
-    else if(isCleared){statusText='✓ Cleared!';statusClass='cleared';}
-    else{statusText='£'+rem.toFixed(2)+' remaining';statusClass='';}
-    const div=document.createElement('div');div.className='debt-item';div.id='debt-item-'+d.id;
-    div.innerHTML=`<div class="debt-top"><input style="background:none;border:none;border-bottom:1px solid var(--border2);color:${color};font-size:14px;font-weight:600;font-family:'Sora',sans-serif;outline:none;width:110px;padding:2px 0;" placeholder="Name..." value="${d.name}" oninput="updDebt(${d.id},'name',this.value)" /><div class="debt-right"><div class="debt-owed">Owed: £<input type="number" style="background:none;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;width:60px;outline:none;padding:2px 0;" value="${d.owed||''}" placeholder="0" min="0" oninput="updDebt(${d.id},'owed',this.value)" /></div><input class="debt-input" type="number" placeholder="£ paying" min="0" value="${d.paying||''}" oninput="updDebt(${d.id},'paying',this.value)" /><button class="del" onclick="removeDebt(${d.id})" style="font-size:15px;">✕</button></div></div><div class="debt-bar-track"><div class="debt-bar-fill" style="width:${pct}%;background:${color};"></div></div><div class="debt-status ${rem===0?'cleared':''}">${rem===0?'✓ Cleared!':'£'+rem.toFixed(2)+' remaining'}</div>`;
-    el.appendChild(div);
-  });
-  brecalc();
-}
+
 
 function bfmt(n){return(n<0?'-':'')+'£'+Math.abs(n).toFixed(2);}
 function bpct(n,t){return t?Math.min(100,Math.max(0,n/t*100)):0;}
