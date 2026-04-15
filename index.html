@@ -325,8 +325,29 @@ body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--border:rgba(0,0,0,0.08);--
 
   <!-- STREAM -->
   <div id="p-stream" class="panel">
+    <!-- STREAM CURRENT AVAILABLE -->
+    <div style="background:var(--green-dim);border:1px solid rgba(29,185,84,0.25);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-family:'DM Mono',monospace;">Stream current available</div>
+      <div style="font-size:52px;font-weight:600;font-family:'DM Mono',monospace;color:var(--green);line-height:1;" id="stream-current-amt">£0.00</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;" id="stream-current-sub">Log shifts to see what you can access</div>
+      <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(29,185,84,0.2);">
+        <div style="text-align:center;">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Total earned</div>
+          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--text);" id="sc-earned">£0.00</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Already taken</div>
+          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--amber);" id="sc-taken">£0.00</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Available now</div>
+          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--green);" id="sc-available">£0.00</div>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="card-head"><span class="card-title">Stream early access</span></div>
+      <div class="card-head"><span class="card-title">Stream breakdown</span></div>
       <div class="srow"><span class="srow-lbl">Total earned this period</span><span class="srow-val" id="st-total">£0.00</span></div>
       <div class="srow"><span class="srow-lbl">Stream available (50%)</span><span class="srow-val g" id="st-50">£0.00</span></div>
       <div class="srow total"><span class="srow-lbl">You receive via Stream</span><span class="srow-val g" id="st-actual">£0.00</span></div>
@@ -700,6 +721,19 @@ function updateMetrics(totalHrs,earned){
   document.getElementById('pf').style.width=earned>0?'50%':'0%';
   document.getElementById('pl-mid').textContent='Stream: £'+half.toFixed(2);
   document.getElementById('pl-max').textContent='Total: £'+earned.toFixed(2);
+  // Update stream current available
+  const taken=withdrawals.reduce((s,w)=>s+w.amt,0);
+  const currentAvail=Math.max(0,half-taken);
+  const scAmt=document.getElementById('stream-current-amt');
+  const scSub=document.getElementById('stream-current-sub');
+  const scE=document.getElementById('sc-earned');
+  const scT=document.getElementById('sc-taken');
+  const scA=document.getElementById('sc-available');
+  if(scAmt)scAmt.textContent='£'+currentAvail.toFixed(2);
+  if(scSub)scSub.textContent=earned>0?(currentAvail>0?'Ready to withdraw via Stream':'You\'ve taken your full Stream amount'):'Log shifts to see what you can access';
+  if(scE)scE.textContent='£'+earned.toFixed(2);
+  if(scT)scT.textContent='£'+taken.toFixed(2);
+  if(scA)scA.textContent='£'+currentAvail.toFixed(2);
 }
 
 function render(){
@@ -1210,16 +1244,28 @@ function renderPaydayPlan(){
 
   if(earned===0){el.innerHTML='<div class="empty" style="padding:16px 0;">Log shifts to generate your payday plan</div>';return;}
 
+  // Group spending by category
+  const spendByCat={};
+  spending.forEach(s=>{if(!spendByCat[s.cat])spendByCat[s.cat]=0;spendByCat[s.cat]+=s.amt;});
+  const spentFood=spendByCat['food']||0;
+  const spentFuel=spendByCat['fuel']||0;
+  const spentBills=spendByCat['bills']||0;
+  const spentDebt=spendByCat['debt']||0;
+  const spentSavings=spendByCat['savings']||0;
+  const spentWants=spendByCat['wants']||0;
+  const spentOther=spendByCat['other']||0;
+  const totalSpent=spending.reduce((s,x)=>s+x.amt,0);
+
   const steps=[
     {label:'Landing on payday',amt:landing,color:'var(--green)',icon:'💷',isTotal:true},
-    {label:'Fixed bills',amt:-fixedTotal,color:'var(--red)',icon:'📱',note:bills.map(b=>b.name).join(', ')||'none'},
-    {label:'Fuel + food + needs',amt:-(fuel+50+apex+20),color:'#fb923c',icon:'⛽'},
-    {label:'Debt payments this period',amt:-debtTotal,color:'var(--purple)',icon:'💳'},
+    {label:'Fixed bills',amt:-fixedTotal,color:'var(--red)',icon:'📱',note:bills.map(b=>b.name).join(', ')||'none',spent:spentBills},
+    {label:'Fuel + food + needs',amt:-(fuel+50+apex+20),color:'#fb923c',icon:'⛽',spent:spentFood+spentFuel},
+    {label:'Debt payments',amt:-debtTotal,color:'var(--purple)',icon:'💳',spent:spentDebt},
     {label:'People you owe',amt:-iOweTotal,color:'var(--red)',icon:'🤝',note:iOwe.filter(o=>!o.paid).map(o=>o.name).join(', ')||'none'},
-    {label:'Savings',amt:-sav,color:'var(--cyan)',icon:'🏦'},
+    {label:'Savings',amt:-sav,color:'var(--cyan)',icon:'🏦',spent:spentSavings},
   ];
-  const afterPlan=landing+steps.slice(1).reduce((s,x)=>s+x.amt,0);
-  steps.push({label:'Left for you (wants)',amt:afterPlan,color:afterPlan>=0?'var(--amber)':'var(--red)',icon:'🛍️',isTotal:true});
+  const afterPlan=landing-totalSpent;
+  steps.push({label:'Left for you (wants)',amt:afterPlan,color:afterPlan>=0?'var(--amber)':'var(--red)',icon:'🛍️',isTotal:true,note:totalSpent>0?'£'+totalSpent.toFixed(2)+' spent so far':''});
 
   let running=landing;
   let html='';
@@ -1235,10 +1281,14 @@ function renderPaydayPlan(){
         <span style="font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:${s.color};">${s.amt>=0?'£'+s.amt.toFixed(2):'−£'+Math.abs(s.amt).toFixed(2)}</span>
       </div>`;
     } else if(s.amt!==0){
+      const spentStr=s.spent>0?`<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green);margin-left:6px;">✓ £${s.spent.toFixed(2)} paid</span>`:'';
       html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-top:1px solid var(--border);">
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="font-size:16px;">${s.icon}</span>
-          <div><div style="font-size:13px;color:var(--text);">${s.label}</div>${s.note?`<div style="font-size:11px;color:var(--muted);">${s.note}</div>`:''}</div>
+          <div>
+            <div style="font-size:13px;color:var(--text);display:flex;align-items:center;">${s.label}${spentStr}</div>
+            ${s.note?`<div style="font-size:11px;color:var(--muted);">${s.note}</div>`:''}
+          </div>
         </div>
         <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:${s.color};">${s.amt<0?'−':''}£${Math.abs(s.amt).toFixed(2)}</span>
       </div>`;
