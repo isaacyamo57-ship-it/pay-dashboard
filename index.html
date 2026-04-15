@@ -348,6 +348,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
     <div class="budget-rule">
       <div class="br-title">Budget Breakdown <span class="br-pill">Isaac's Rule</span></div>
       <div class="br-bar-wrap">
+        <div class="br-seg" id="b-barBills" style="width:0%;background:var(--red)"></div>
         <div class="br-seg needs" id="b-barNeeds" style="width:0%"></div>
         <div class="br-seg debt" id="b-barDebt" style="width:0%"></div>
         <div class="br-seg savings" id="b-barSavings" style="width:0%"></div>
@@ -355,6 +356,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         <div class="br-seg gap" id="b-barGap" style="width:100%"></div>
       </div>
       <div class="br-rows">
+        <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:var(--red)"></div>Fixed Bills</div><div class="br-pct" id="b-pctBills">0%</div><div class="br-amt" style="color:var(--red)" id="b-amtBills">£0</div></div>
         <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:#60a5fa"></div>Needs</div><div class="br-pct" id="b-pctNeeds">0%</div><div class="br-amt" style="color:#60a5fa" id="b-amtNeeds">£0</div></div>
         <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:#c084fc"></div>Debt</div><div class="br-pct" id="b-pctDebt">0%</div><div class="br-amt" style="color:#c084fc" id="b-amtDebt">£0</div></div>
         <div class="br-row"><div class="br-dot-label"><div class="br-dot" style="background:var(--green)"></div>Savings</div><div class="br-pct" id="b-pctSavings">0%</div><div class="br-amt" style="color:var(--green)" id="b-amtSavings">£0</div></div>
