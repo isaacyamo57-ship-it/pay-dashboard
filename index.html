@@ -628,31 +628,31 @@ function saveDebts(){try{localStorage.setItem('pl_debts',JSON.stringify(debts));
 
 function addDebt(){debts.push({id:Date.now(),name:'',owed:0,paying:0});saveDebts();renderDebts();}
 function removeDebt(id){debts=debts.filter(d=>d.id!==id);saveDebts();renderDebts();brecalc();}
-function resetDebt(id){const d=debts.find(d=>d.id===id);if(d){d.paying=0;saveDebts();renderDebts();brecalc();}}
+function resetDebt(id){if(!confirm('Reset all payments for this debt?'))return;const d=debts.find(d=>d.id===id);if(d){d.payments=[];saveDebts();renderDebts();brecalc();}}
+function addPayment(id){
+  const input=document.getElementById('dpay-'+id);
+  const amt=parseFloat(input.value)||0;
+  if(!amt)return;
+  const d=debts.find(d=>d.id===id);
+  if(!d)return;
+  if(!d.payments)d.payments=[];
+  const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  d.payments.push({amt,date:today});
+  saveDebts();
+  input.value='';
+  renderDebts();
+}
+function removePayment(id,pi){
+  const d=debts.find(d=>d.id===id);
+  if(!d||!d.payments)return;
+  d.payments.splice(pi,1);
+  saveDebts();renderDebts();
+}
 function updDebt(id,f,v){
   const d=debts.find(d=>d.id===id);
   if(!d)return;
   d[f]=f==='name'?v:parseFloat(v)||0;
   saveDebts();
-  // update bar and status in place without re-rendering
-  const owed=d.owed||0, paying=d.paying||0;
-  const rem=Math.max(0,owed-paying);
-  const isCleared=owed>0&&paying>=owed;
-  const paidPct=owed>0?Math.min(100,(paying/owed)*100):0;
-  let statusText,statusClass;
-  if(!owed){statusText='Enter amount owed above';statusClass='';}
-  else if(isCleared){statusText='✓ Cleared! Great work';statusClass='cleared';}
-  else if(!paying){statusText='£'+owed.toFixed(2)+' remaining — enter payment amount';statusClass='';}
-  else{statusText='£'+rem.toFixed(2)+' remaining (paid £'+paying.toFixed(2)+')';statusClass='';}
-  const item=document.getElementById('debt-item-'+id);
-  if(item){
-    const bar=item.querySelector('.debt-bar-fill');
-    const status=item.querySelector('.debt-status');
-    const pct=item.querySelector('.debt-pct');
-    if(bar)bar.style.width=paidPct+'%';
-    if(status){status.textContent=statusText;status.className='debt-status'+(statusClass?' '+statusClass:'');}
-    if(pct)pct.textContent=owed>0?Math.round(paidPct)+'% paid':'';
-  }
   brecalc();
 }
 
@@ -686,7 +686,7 @@ function brecalc(){
   const sav=parseFloat(document.getElementById('b-savings').value)||0;
   const fixedTotal=bills.reduce((s,b)=>s+(b.amt||0),0);
   const debt=debts.reduce((s,d)=>s+(d.paying||0),0);
-  const totalDebtRem=debts.reduce((s,d)=>s+Math.max(0,d.owed-d.paying),0);
+  const totalDebtRem=debts.reduce((s,d)=>{const paid=(d.payments||[]).reduce((t,p)=>t+p.amt,0);return s+Math.max(0,(d.owed||0)-paid);},0);
   const B_FOOD=50,B_T212=20;
   const varNeeds=fuel+B_FOOD+apex+B_T212;
   const totalNeeds=fixedTotal+varNeeds;
