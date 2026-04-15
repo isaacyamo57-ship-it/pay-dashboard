@@ -972,13 +972,17 @@ function syncIncomeFromShifts(){
   const withdrawn=withdrawals.reduce((s,w)=>s+w.amt,0);
   const totalFees=withdrawals.length*1.95;
   const paydayAmt=Math.max(0,earned-withdrawn-totalFees);
+  const half=earned*0.5;
+  const currentAvailStream=Math.max(0,half-withdrawn);
   const input=document.getElementById('b-income');
   if(input){
-    input.value=paydayAmt.toFixed(2);
+    input.value=currentAvailStream.toFixed(2);
     const sub=document.getElementById('b-income-sub');
     if(sub){
-      if(earned>0){sub.textContent='full pay £'+earned.toFixed(2)+' · after stream & fees';sub.style.color=withdrawn>0?'var(--amber)':'var(--green)';}
-      else{sub.textContent='no shifts logged yet';sub.style.color='var(--muted)';}
+      if(earned>0){
+        sub.textContent='stream now: £'+currentAvailStream.toFixed(2)+' · payday: £'+paydayAmt.toFixed(2);
+        sub.style.color=currentAvailStream>0?'var(--green)':'var(--amber)';
+      } else{sub.textContent='no shifts logged yet';sub.style.color='var(--muted)';}
     }
     brecalc();
   }
