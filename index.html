@@ -389,9 +389,9 @@ body.dark .tab.on{box-shadow:0 2px 8px rgba(46,204,113,0.2);}
     </div>
     <div class="metric a">
       <span class="metric-icon">⚡</span>
-      <div class="mlabel">Stream available</div>
+      <div class="mlabel">Stream available now</div>
       <div class="mval" id="m-stream">£0.00</div>
-      <div class="msub">50% of earned</div>
+      <div class="msub" id="m-stream-sub">50% minus taken</div>
       <div class="metric-accent"></div>
     </div>
     <div class="metric b full">
@@ -590,7 +590,7 @@ body.dark .tab.on{box-shadow:0 2px 8px rgba(46,204,113,0.2);}
     </div>
     <div class="zl-card">
       <div class="zl-title">Where your money goes</div>
-      <div class="zl-row"><div class="zl-key">Income (stream available)</div><div class="zl-val" id="b-zlIncome">£0.00</div></div>
+      <div class="zl-row"><div class="zl-key">Income (payday amount)</div><div class="zl-val" id="b-zlIncome">£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Fixed bills</div><div class="zl-val" style="color:var(--red)" id="b-zlBills">-£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Needs</div><div class="zl-val" style="color:var(--amber)" id="b-zlNeeds">-£0.00</div></div>
       <div class="zl-row"><div class="zl-key">Debt payments</div><div class="zl-val" style="color:var(--purple)" id="b-zlDebt">-£0.00</div></div>
@@ -788,7 +788,11 @@ function updateMetrics(totalHrs,earned){
   const half=earned*0.5;
   document.getElementById('m-earned').textContent='£'+earned.toFixed(2);
   document.getElementById('m-hrs').textContent=fmt(totalHrs)+' logged';
-  document.getElementById('m-stream').textContent='£'+half.toFixed(2);
+  const nowTaken=withdrawals.reduce((s,w)=>s+w.amt,0);
+  const nowAvail=Math.max(0,half-nowTaken);
+  document.getElementById('m-stream').textContent='£'+nowAvail.toFixed(2);
+  const msub=document.getElementById('m-stream-sub');
+  if(msub)msub.textContent=nowTaken>0?'£'+nowTaken.toFixed(2)+' already taken':'50% of earned';
   document.getElementById('st-total').textContent='£'+earned.toFixed(2);
   document.getElementById('st-50').textContent='£'+half.toFixed(2);
   document.getElementById('st-actual').textContent='£'+half.toFixed(2);
@@ -1087,19 +1091,22 @@ function renderIncomeBreakdown(earned,withdrawn,totalFees,paydayAmt){
 // ── MONTH COMPARE ──
 function renderMonthCompare(currentEarned){
   const el=document.getElementById('month-compare');if(!el)return;
+  // Group by pay period payday date (each period = one payday)
   const groups={};
   shifts.forEach(s=>{
     const p=PAY_SCHEDULE.find(p=>s.d>=p.from&&s.d<=p.to);
-    const key=p?p.month:'Other';
-    if(!groups[key])groups[key]={month:key,payday:p?p.payday:'',earned:0};
+    if(!p)return;
+    const key=p.payday;
+    if(!groups[key])groups[key]={month:p.month,payday:p.payday,earned:0,shifts:0};
     groups[key].earned+=hrs(s.s,s.e)*RATE;
+    groups[key].shifts++;
   });
   const sorted=Object.values(groups).sort((a,b)=>a.payday>b.payday?-1:1);
-  if(sorted.length<2){el.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:4px 0;">Log shifts across multiple periods to compare</div>';return;}
+  if(sorted.length<2){el.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:4px 0;">Log shifts across multiple pay periods to compare</div>';return;}
   let html='<div class="compare-grid">';
   sorted.slice(0,4).forEach((g,i)=>{
     const prev=sorted[i+1];const delta=prev?g.earned-prev.earned:null;
-    html+=`<div class="cmp-card"><div class="cmp-label">${g.month}</div><div class="cmp-val" style="color:var(--green)">£${g.earned.toFixed(2)}</div>${delta!==null?`<div class="cmp-delta ${delta>=0?'up':'down'}">${delta>=0?'▲':'▼'} £${Math.abs(delta).toFixed(2)}</div>`:''}</div>`;
+    html+=`<div class="cmp-card"><div class="cmp-label">${g.month}</div><div class="cmp-val" style="color:var(--green)">£${g.earned.toFixed(2)}</div><div style="font-size:10px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace;">${g.shifts} shift${g.shifts!==1?'s':''}</div>${delta!==null?`<div class="cmp-delta ${delta>=0?'up':'down'}">${delta>=0?'▲':'▼'} £${Math.abs(delta).toFixed(2)}</div>`:''}</div>`;
   });
   html+='</div>';
   el.innerHTML=html;
@@ -1174,8 +1181,10 @@ function setMonth(btn){document.querySelectorAll('.mbtn').forEach(b=>b.classList
 
 document.getElementById('sw-date').value=new Date().toISOString().split('T')[0];
 renderPaySchedule();updatePaydayMetric();checkCutoffWarning();
-render();renderBills();renderDebts();renderWithdrawals();syncIncomeFromShifts();
-renderSpending();renderOweMe();renderIOwe();renderPaydayPlan();checkStreamNotify();
+render();renderBills();renderDebts();renderWithdrawals();
+renderSpending();renderOweMe();renderIOwe();
+syncIncomeFromShifts();
+renderPaydayPlan();checkStreamNotify();
 
 // ── SPENDING LOG ──
 const CAT_ICONS={'food':'🍕','fuel':'⛽','bills':'📱','debt':'💳','savings':'🏦','wants':'🛍️','other':'📦'};
@@ -1338,16 +1347,22 @@ function renderPaydayPlan(){
   const spentOther=spendByCat['other']||0;
   const totalSpent=spending.reduce((s,x)=>s+x.amt,0);
 
+  const needsTotal=fuel+50+apex+20;
+  const afterBills=landing-fixedTotal;
+  const afterNeeds=afterBills-needsTotal;
+  const afterDebt=afterNeeds-debtTotal;
+  const afterIOwe=afterDebt-iOweTotal;
+  const afterSav=afterIOwe-sav;
   const steps=[
     {label:'Landing on payday',amt:landing,color:'var(--green)',icon:'💷',isTotal:true},
-    {label:'Fixed bills',amt:-fixedTotal,color:'var(--red)',icon:'📱',note:bills.map(b=>b.name).join(', ')||'none',spent:spentBills},
-    {label:'Fuel + food + needs',amt:-(fuel+50+apex+20),color:'#fb923c',icon:'⛽',spent:spentFood+spentFuel},
-    {label:'Debt payments',amt:-debtTotal,color:'var(--purple)',icon:'💳',spent:spentDebt},
-    {label:'People you owe',amt:-iOweTotal,color:'var(--red)',icon:'🤝',note:iOwe.filter(o=>!o.paid).map(o=>o.name).join(', ')||'none'},
-    {label:'Savings',amt:-sav,color:'var(--cyan)',icon:'🏦',spent:spentSavings},
+    {label:'Fixed bills',amt:-fixedTotal,color:'var(--red)',icon:'📱',note:bills.map(b=>b.name).join(', ')||'none',spent:spentBills,running:afterBills},
+    {label:'Fuel + food + needs',amt:-needsTotal,color:'#fb923c',icon:'⛽',spent:spentFood+spentFuel,running:afterNeeds},
+    {label:'Debt payments',amt:-debtTotal,color:'var(--purple)',icon:'💳',spent:spentDebt,running:afterDebt},
+    {label:'People you owe',amt:-iOweTotal,color:'var(--red)',icon:'🤝',note:iOwe.filter(o=>!o.paid).map(o=>o.name).join(', ')||'none',running:afterIOwe},
+    {label:'Savings',amt:-sav,color:'var(--cyan)',icon:'🏦',spent:spentSavings,running:afterSav},
   ];
-  const afterPlan=landing-totalSpent;
-  steps.push({label:'Left for you (wants)',amt:afterPlan,color:afterPlan>=0?'var(--amber)':'var(--red)',icon:'🛍️',isTotal:true,note:totalSpent>0?'£'+totalSpent.toFixed(2)+' spent so far':''});
+  const afterPlan=afterSav;
+  steps.push({label:'Left for you (wants)',amt:afterPlan,color:afterPlan>=40?'var(--green)':afterPlan>=0?'var(--amber)':'var(--red)',icon:'🛍️',isTotal:true,note:totalSpent>0?'£'+totalSpent.toFixed(2)+' spent so far':''});
 
   let running=landing;
   let html='';
