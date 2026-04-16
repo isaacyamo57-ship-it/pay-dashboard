@@ -1443,13 +1443,15 @@ function renderPaydayPlan(){
 function checkStreamNotify(){
   let totalHrs=0;shifts.forEach(s=>{totalHrs+=hrs(s.s,s.e);});
   const earned=totalHrs*RATE;
-  const streamAmt=earned*0.5;
+  const half=earned*0.5;
+  const taken=withdrawals.reduce((s,w)=>s+w.amt,0);
+  const currentAvail=Math.max(0,half-taken);
   const banner=document.getElementById('stream-notify-banner');
   const txt=document.getElementById('stream-notify-text');
   if(!banner)return;
-  if(streamAmt>=50){
+  if(currentAvail>=50){
     banner.style.display='block';
-    if(txt)txt.textContent='You can access £'+streamAmt.toFixed(2)+' early via Stream right now';
+    if(txt)txt.textContent='You can access £'+currentAvail.toFixed(2)+' early via Stream right now';
   } else {
     banner.style.display='none';
   }
