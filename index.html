@@ -10,6 +10,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <title>PL Pay — Isaac</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -691,14 +692,32 @@ body.dark .tab.on{box-shadow:0 2px 8px rgba(46,204,113,0.2);}
 <script>
 
 const RATE=11.44;
+const SB_URL='https://jcofedlmdctudoyjywvf.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impjb2ZlZGxtZGN0dWRveWp5d3ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyOTI0MzUsImV4cCI6MjA5MTg2ODQzNX0.qtrFjMHIuWH0Co66AJ9z_b-D_G46s0Tuq1-NxA7zblA';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
+// ── SUPABASE HELPERS ──
+async function dbGet(table){
+  const {data,error}=await sb.from(table).select('*');
+  if(error){console.error(table,error);return[];}
+  return data||[];
+}
+async function dbUpsert(table,row){
+  const {error}=await sb.from(table).upsert(row,{onConflict:'id'});
+  if(error)console.error('upsert',table,error);
+}
+async function dbDelete(table,id){
+  const {error}=await sb.from(table).delete().eq('id',id);
+  if(error)console.error('delete',table,error);
+}
 
 // ── EARLY DECLARATIONS ──
-let spending=[];try{spending=JSON.parse(localStorage.getItem('pl_spending')||'[]');}catch(e){}
-function saveSpending(){try{localStorage.setItem('pl_spending',JSON.stringify(spending));}catch(e){}}
-let oweMe=[];try{oweMe=JSON.parse(localStorage.getItem('pl_oweme')||'[]');}catch(e){}
-function saveOweMe(){try{localStorage.setItem('pl_oweme',JSON.stringify(oweMe));}catch(e){}}
-let iOwe=[];try{iOwe=JSON.parse(localStorage.getItem('pl_iowe')||'[]');}catch(e){}
-function saveIOwe(){try{localStorage.setItem('pl_iowe',JSON.stringify(iOwe));}catch(e){}}
+let spending=[];
+async function saveSpending(){for(const s of spending)await dbUpsert('spending',s);}
+let oweMe=[];
+async function saveOweMe(){for(const o of oweMe)await dbUpsert('owe_me',o);}
+let iOwe=[];
+async function saveIOwe(){for(const o of iOwe)await dbUpsert('i_owe',o);}
 
 const PAY_SCHEDULE=[
   {period:10,month:'January',  from:'2025-12-07',to:'2026-01-03',cutoff:'2026-01-05',payday:'2026-01-30'},
@@ -761,8 +780,7 @@ function checkCutoffWarning(){
 
 // ── SHIFTS ──
 let shifts=[];
-try{shifts=JSON.parse(localStorage.getItem('plpay')||'[]');}catch(e){}
-function save(){try{localStorage.setItem('plpay',JSON.stringify(shifts));}catch(e){}}
+async function save(){for(const s of shifts)await dbUpsert('shifts',s);}
 
 function checkPeriodReset(){
   const banner=document.getElementById('period-reset-banner');
@@ -784,7 +802,7 @@ function hrs(s,e){
 function fmt(h){const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+'h '+(mm<10?'0':'')+mm+'m';}
 
 function addShift(){shifts.push({id:Date.now(),d:new Date().toISOString().split('T')[0],s:'',e:'',note:''});save();render();}
-function delShift(id){shifts=shifts.filter(x=>x.id!==id);save();render();}
+async function delShift(id){shifts=shifts.filter(x=>x.id!==id);await dbDelete('shifts',id);render();}
 function upd(id,f,v){const x=shifts.find(x=>x.id===id);if(x){x[f]=v;save();render();}}
 
 function updateMetrics(totalHrs,earned){
@@ -897,8 +915,7 @@ function exportCSV(){
 
 // ── STREAM WITHDRAWALS ──
 let withdrawals=[];
-try{withdrawals=JSON.parse(localStorage.getItem('pl_withdrawals')||'[]');}catch(e){}
-function saveW(){try{localStorage.setItem('pl_withdrawals',JSON.stringify(withdrawals));}catch(e){}}
+async function saveW(){for(const w of withdrawals)await dbUpsert('withdrawals',w);}
 
 function addWithdrawal(){
   const amt=parseFloat(document.getElementById('sw-amt').value)||0;
@@ -907,7 +924,7 @@ function addWithdrawal(){
   withdrawals.push({id:Date.now(),amt,date});
   saveW();document.getElementById('sw-amt').value='';renderWithdrawals();syncIncomeFromShifts();
 }
-function delWithdrawal(id){withdrawals=withdrawals.filter(w=>w.id!==id);saveW();renderWithdrawals();syncIncomeFromShifts();}
+async function delWithdrawal(id){withdrawals=withdrawals.filter(w=>w.id!==id);await dbDelete('withdrawals',id);renderWithdrawals();syncIncomeFromShifts();}
 
 function renderWithdrawals(){
   const el=document.getElementById('sw-list');el.innerHTML='';
@@ -947,10 +964,10 @@ try{if(localStorage.getItem('pl_theme')==='dark'){document.body.classList.add('d
 
 // ── BILLS ──
 let bills=[];
-try{bills=JSON.parse(localStorage.getItem('pl_bills')||'null')||[{id:1,name:'O2 + Vodafone',amt:75.57,due:''},{id:2,name:'Car Insurance',amt:52,due:''},{id:3,name:'TradingView',amt:25.99,due:''}];}catch(e){bills=[{id:1,name:'O2 + Vodafone',amt:75.57,due:''},{id:2,name:'Car Insurance',amt:52,due:''},{id:3,name:'TradingView',amt:25.99,due:''}];}
-function saveBills(){try{localStorage.setItem('pl_bills',JSON.stringify(bills));}catch(e){}}
+const DEFAULT_BILLS=[{id:1,name:'O2 + Vodafone',amt:75.57,due:''},{id:2,name:'Car Insurance',amt:52,due:''},{id:3,name:'TradingView',amt:25.99,due:''}];
+async function saveBills(){for(const b of bills)await dbUpsert('bills',b);}
 function addBill(){bills.push({id:Date.now(),name:'',amt:0,due:''});saveBills();renderBills();}
-function removeBill(id){bills=bills.filter(b=>b.id!==id);saveBills();renderBills();brecalc();}
+async function removeBill(id){bills=bills.filter(b=>b.id!==id);await dbDelete('bills',id);renderBills();brecalc();}
 function updBill(id,f,v){const b=bills.find(b=>b.id===id);if(b){b[f]=f==='name'||f==='due'?v:parseFloat(v)||0;saveBills();brecalc();}}
 
 function renderBills(){
@@ -979,10 +996,9 @@ function renderBills(){
 // ── DEBTS ──
 const DEBT_COLORS=['#c084fc','#60a5fa','#fb923c','#22d3ee','#f87171','#4ade80','#fbbf24'];
 let debts=[];
-try{debts=JSON.parse(localStorage.getItem('pl_debts')||'[]');}catch(e){}
-function saveDebts(){try{localStorage.setItem('pl_debts',JSON.stringify(debts));}catch(e){}}
+async function saveDebts(){for(const d of debts)await dbUpsert('debts',d);}
 function addDebt(){debts.push({id:Date.now(),name:'',owed:0,payments:[]});saveDebts();renderDebts();}
-function removeDebt(id){debts=debts.filter(d=>d.id!==id);saveDebts();renderDebts();brecalc();}
+async function removeDebt(id){debts=debts.filter(d=>d.id!==id);await dbDelete('debts',id);renderDebts();brecalc();}
 function resetDebt(id){if(!confirm('Reset all payments for this debt?'))return;const d=debts.find(d=>d.id===id);if(d){d.payments=[];saveDebts();updateDebtUI(id);brecalc();}}
 
 function addPayment(id){
@@ -1184,10 +1200,36 @@ function setMonth(btn){document.querySelectorAll('.mbtn').forEach(b=>b.classList
 
 document.getElementById('sw-date').value=new Date().toISOString().split('T')[0];
 renderPaySchedule();updatePaydayMetric();checkCutoffWarning();
-render();renderBills();renderDebts();renderWithdrawals();
-renderSpending();renderOweMe();renderIOwe();
-syncIncomeFromShifts();
-renderPaydayPlan();checkStreamNotify();
+
+// Show loading state
+document.getElementById('shift-list').innerHTML='<div class="empty">Loading from cloud...</div>';
+
+// Load all data from Supabase
+async function loadAll(){
+  try{
+    const [sh,wd,bl,db,sp,om,io]=await Promise.all([
+      dbGet('shifts'),dbGet('withdrawals'),dbGet('bills'),
+      dbGet('debts'),dbGet('spending'),dbGet('owe_me'),dbGet('i_owe')
+    ]);
+    shifts=sh;
+    withdrawals=wd;
+    bills=bl.length>0?bl:DEFAULT_BILLS;
+    // ensure payments is array for each debt
+    debts=db.map(d=>({...d,payments:Array.isArray(d.payments)?d.payments:(d.payments||[])}));
+    spending=sp;
+    oweMe=om;
+    iOwe=io;
+    render();renderBills();renderDebts();renderWithdrawals();
+    renderSpending();renderOweMe();renderIOwe();
+    syncIncomeFromShifts();renderPaydayPlan();checkStreamNotify();
+  }catch(e){
+    console.error('Load error:',e);
+    // Fall back to empty state
+    bills=DEFAULT_BILLS;
+    render();renderBills();renderDebts();
+  }
+}
+loadAll();
 
 // ── SPENDING LOG ──
 const CAT_ICONS={'food':'🍕','fuel':'⛽','bills':'📱','debt':'💳','savings':'🏦','wants':'🛍️','other':'📦'};
@@ -1204,7 +1246,7 @@ function addSpend(){
   document.getElementById('sp-amt').value='';
   renderSpending();renderPaydayPlan();
 }
-function delSpend(id){spending=spending.filter(s=>s.id!==id);saveSpending();renderSpending();renderPaydayPlan();}
+async function delSpend(id){spending=spending.filter(s=>s.id!==id);await dbDelete('spending',id);renderSpending();renderPaydayPlan();}
 
 function renderSpending(){
   const el=document.getElementById('spend-list');el.innerHTML='';
@@ -1250,7 +1292,7 @@ function addOweMe(){
   renderOweMe();
 }
 function markOweMePaid(id){const x=oweMe.find(o=>o.id===id);if(x){x.paid=!x.paid;saveOweMe();renderOweMe();}}
-function delOweMe(id){oweMe=oweMe.filter(o=>o.id!==id);saveOweMe();renderOweMe();}
+async function delOweMe(id){oweMe=oweMe.filter(o=>o.id!==id);await dbDelete('owe_me',id);renderOweMe();}
 
 function renderOweMe(){
   const el=document.getElementById('owe-me-list');el.innerHTML='';
@@ -1290,7 +1332,7 @@ function addIOwe(){
   renderIOwe();
 }
 function markIOwe(id){const x=iOwe.find(o=>o.id===id);if(x){x.paid=!x.paid;saveIOwe();renderIOwe();}}
-function delIOwe(id){iOwe=iOwe.filter(o=>o.id!==id);saveIOwe();renderIOwe();}
+async function delIOwe(id){iOwe=iOwe.filter(o=>o.id!==id);await dbDelete('i_owe',id);renderIOwe();}
 
 function renderIOwe(){
   const el=document.getElementById('i-owe-list');el.innerHTML='';
